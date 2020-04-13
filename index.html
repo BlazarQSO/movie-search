@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
@@ -7,7 +8,89 @@
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="shortcut icon" href="./img/icon/logo.png" type="image/png">
 </head>
-<body>
 
+<body class="body">
+    <header class="header">
+        <div class="title">
+            <div class="title__ribbon">
+                <span>The Best Movies</span>
+            </div>
+            <h1 class="title__text">Movie Search</h1>
+        </div>
+    </header>
+    <main class="main">
+        <section class="search">
+            <input class="search__input" type="text" id="input" placeholder="Search movie" />
+            <button class="search__btn" id="search" type="button">Search</button>
+            <p class="search__error">Error Search</p>
+        </section>
+        <section class="slider" id="slider">
+            <div class="slider__arrow" id="left">
+                <img src="./src/img/icon/arrow-left.png" class="slider__item-arrow-left" width="16" height="27"
+                    alt="" />
+            </div>
+            <figure class="slider__slides" id="containerSlides">
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+                <div class="slider__slides-item">
+                    <img src="./src/img/slide2.png" alt="" />
+                </div>
+            </figure>
+            <div class="slider__arrow" id="right">
+                <img src="./src/img/icon/arrow-right.png" class="slider__item-arrow-right" width="16" height="27"
+                    alt="" />
+            </div>
+        </section>
+        <div class="buttons">
+            <button type="button" id="blob1" class="buttons__item">1</button>
+            <button type="button" id="blob2" class="buttons__item">2</button>
+            <button type="button" id="blob3" class="buttons__item">3</button>
+            <button type="button" id="blob4" class="buttons__item">4</button>
+            <button type="button" id="blob5" class="buttons__item">5</button>
+            <button type="button" id="blob6" class="buttons__item">6</button>
+        </div>
+    </main>
+    <div>
+        <section>
+            <h2>Films</h2>
+            <figure>
+                <img src="./src/img/film1.jpg" alt="" />
+            </figure>
+            <figure>
+                <img src="./src/img/film2.jpg" alt="" />
+            </figure>
+            <figure>
+                <img src="./src/img/film3.jpg" alt="" />
+            </figure>
+        </section>
+        <section>
+            <h2>TV serials</h2>
+            <figure>
+                <img src="./src/img/serial1.jpg" alt="" />
+            </figure>
+            <figure>
+                <img src="./src/img/serial2.jpg" alt="" />
+            </figure>
+            <figure>
+                <img src="./src/img/serial3.jpg" alt="" />
+            </figure>
+        </section>
+    </div>
+    <div class="background-top"></div>
+    <div class="background-bottom"></div>
 </body>
+
 </html>
