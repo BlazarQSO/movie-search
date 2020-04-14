@@ -1,3 +1,6 @@
 import './style/style.scss';
+import getRequest from './components/search/search';
 
-console.log('ok');
+window.addEventListener('load', () => {
+    document.getElementById('search').addEventListener('click', getRequest);
+});
