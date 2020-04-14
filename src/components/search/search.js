@@ -8,7 +8,38 @@ function showErrorMessage(text) {
 }
 
 function showResults(films) {
-    return alert(films);
+    const slider = document.getElementById('containerSlides');
+    slider.innerHTML = '';
+    for (let i = 0, len = films.length; i < len; i += 1) {
+        const slide = document.createElement('div');
+        slide.className = 'slider__slides-item';
+        slide.id = `slide${i}`;
+        const link = document.createElement('a');
+        link.className = 'slider__slides-link';
+        link.id = `link${i}`;
+        link.innerHTML = films[i].title;
+        const img = document.createElement('img');
+        img.id = `img${i}`;
+        img.src = films[i].poster;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'slider__slides-wrap';
+        const year = document.createElement('span');
+        year.className = 'slider__slides-year';
+        year.id = `year${i}`;
+        year.innerHTML = films[i].year;
+        const rating = document.createElement('span');
+        rating.className = 'slider__slides-rating';
+        rating.id = `rank${i}`;
+        rating.innerHTML = films[i].rank;
+
+        wrap.append(year);
+        wrap.append(rating);
+        slide.append(link);
+        slide.append(img);
+        slide.append(wrap);
+        slider.append(slide);
+    }
 }
 
 async function getRanking(imdbID) {
