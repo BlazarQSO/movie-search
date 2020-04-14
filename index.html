@@ -4,7 +4,7 @@
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>Search</title>
+    <title>Movie Search</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="shortcut icon" href="./img/icon/logo.png" type="image/png">
 </head>
@@ -13,84 +13,76 @@
     <header class="header">
         <div class="title">
             <div class="title__ribbon">
-                <span>The Best Movies</span>
+                <span>Сinema</span>
             </div>
             <h1 class="title__text">Movie Search</h1>
         </div>
     </header>
     <main class="main">
         <section class="search">
-            <input class="search__input" type="text" id="input" placeholder="Search movie" />
+            <div class="search__wrap">
+                <input class="search__wrap-input" type="text" id="input" placeholder="Search movie" />
+                <button type="button" class="search__wrap-key" id="key"></button>
+                <p class="search__wrap-error">Error Search</p>
+            </div>
             <button class="search__btn" id="search" type="button">Search</button>
-            <p class="search__error">Error Search</p>
         </section>
         <section class="slider" id="slider">
             <div class="slider__arrow" id="left">
-                <img src="./src/img/icon/arrow-left.png" class="slider__item-arrow-left" width="16" height="27"
+                <img src="./src/img/icon/arrow-left.png" class="slider__item-arrow-left" width="100" height="100"
                     alt="" />
             </div>
             <figure class="slider__slides" id="containerSlides">
                 <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
+                    <a href="#" class="slider__slides-link">Ege of Tommorow</a>
+                    <img src="./src/img/slide2.png" width="250" alt="" />
+                    <div class="slider__slides-wrap">
+                        <span class="slider__slides-year" id="year">9999</span>
+                        <span class="slider__slides-rating" id="rating">10.0</span>
+                    </div>
                 </div>
                 <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
+                    <a href="#" class="slider__slides-link">Ege of Tommorow</a>
+                    <img src="./src/img/slide2.png" width="250" alt="" />
+                    <div class="slider__slides-wrap">
+                        <span class="slider__slides-year" id="year">9999</span>
+                        <span class="slider__slides-rating" id="rating">10.0</span>
+                    </div>
                 </div>
                 <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
+                    <a href="#" class="slider__slides-link">Ege of Tommorow</a>
+                    <img src="./src/img/slide2.png" width="250" alt="" />
+                    <div class="slider__slides-wrap">
+                        <span class="slider__slides-year" id="year">9999</span>
+                        <span class="slider__slides-rating" id="rating">10.0</span>
+                    </div>
                 </div>
                 <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
-                </div>
-                <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
-                </div>
-                <div class="slider__slides-item">
-                    <img src="./src/img/slide2.png" alt="" />
+                    <a href="#" class="slider__slides-link">Ege of Tommorow</a>
+                    <img src="./src/img/slide2.png" width="250" alt="" />
+                    <div class="slider__slides-wrap">
+                        <span class="slider__slides-year" id="year">9999</span>
+                        <span class="slider__slides-rating" id="rating">10.0</span>
+                    </div>
                 </div>
             </figure>
             <div class="slider__arrow" id="right">
-                <img src="./src/img/icon/arrow-right.png" class="slider__item-arrow-right" width="16" height="27"
+                <img src="./src/img/icon/arrow-right.png" class="slider__item-arrow-right" width="100" height="100"
                     alt="" />
             </div>
         </section>
         <div class="buttons">
-            <button type="button" id="blob1" class="buttons__item">1</button>
-            <button type="button" id="blob2" class="buttons__item">2</button>
-            <button type="button" id="blob3" class="buttons__item">3</button>
-            <button type="button" id="blob4" class="buttons__item">4</button>
-            <button type="button" id="blob5" class="buttons__item">5</button>
-            <button type="button" id="blob6" class="buttons__item">6</button>
+            <button type="button" id="blob1" class="buttons__item"></button>
+            <button type="button" id="blob2" class="buttons__item"></button>
+            <button type="button" id="blob3" class="buttons__item"></button>
+            <button type="button" id="blob4" class="buttons__item"></button>
+            <button type="button" id="blob5" class="buttons__item"></button>
+            <button type="button" id="blob6" class="buttons__item"></button>
         </div>
+        <div class="background-top"></div>
+        <div class="background-bottom"></div>
     </main>
-    <div>
-        <section>
-            <h2>Films</h2>
-            <figure>
-                <img src="./src/img/film1.jpg" alt="" />
-            </figure>
-            <figure>
-                <img src="./src/img/film2.jpg" alt="" />
-            </figure>
-            <figure>
-                <img src="./src/img/film3.jpg" alt="" />
-            </figure>
-        </section>
-        <section>
-            <h2>TV serials</h2>
-            <figure>
-                <img src="./src/img/serial1.jpg" alt="" />
-            </figure>
-            <figure>
-                <img src="./src/img/serial2.jpg" alt="" />
-            </figure>
-            <figure>
-                <img src="./src/img/serial3.jpg" alt="" />
-            </figure>
-        </section>
-    </div>
-    <div class="background-top"></div>
-    <div class="background-bottom"></div>
+    <div class="background-body-t"></div>
 </body>
 
 </html>
