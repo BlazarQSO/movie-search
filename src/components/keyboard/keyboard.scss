@@ -1,0 +1,130 @@
+.wrapper {
+    margin: 0 auto;
+    width: 890px;
+    position: absolute;
+    z-index: 99;
+}
+
+.button {
+    color: darkgreen;
+    position: relative;
+    width: 50px;
+    height: 50px;
+    font-size: 22px;
+    font-family: 'Times New Roman', Times, serif;
+    margin-bottom: 5px;
+    margin-left: 9px;
+    border: 2px solid #927e14;
+    box-shadow: black 5px 6px 2px;
+    border-radius: 5px;
+    outline: none;
+    text-decoration-line: none;
+    text-decoration: none;
+    user-select: none;
+    padding: 0px;
+    cursor: pointer;
+    background-image: -moz-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFD700), color-stop(50, #D9CF73), color-stop(100, #8F7800));
+    background-image: -webkit-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);
+    transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.button:hover {
+    background-image: none;
+    background-color: burlywood;
+    color: blue;
+    box-shadow: black 3px 4px 2px;
+    outline: none;
+    text-decoration-line: none;
+    text-decoration: none;
+}
+
+.button:active {
+    background-color: red;
+    color: black;
+    box-shadow: 1px 1px 2px black;
+    outline: none;
+    text-decoration-line: none;
+    text-decoration: none;
+}
+
+.backspace {
+    width: 109px;
+}
+
+.tab {
+    width: 80px;
+}
+
+.backslash {
+    width: 79px;
+}
+
+.capsLock {
+    width: 100px;
+}
+
+.enter {
+    width: 118px;
+}
+
+.shiftLeft {
+    width: 125px;
+}
+
+.shiftRight {
+    width: 93px;
+}
+
+.controlLeft {
+    width: 80px;
+}
+
+.space {
+    width: 374px;
+}
+
+.controlRight {
+    width: 66px;
+}
+
+.delete {
+    width: 36px;
+    margin-left: 6px;
+}
+
+.press {
+    background-image: none;
+    text-decoration-line: none;
+    text-decoration: none;
+    background-color: red;
+    color: black;
+    box-shadow: 1px 1px 2px black;
+    outline: none;
+}
+
+.press:hover {
+    background-color: red;
+}
+
+.info {
+    text-align: center;
+    font-size: 26px;
+    color: goldenrod;
+}
+
+.lampActive::after, .lamp::after {
+    content: '';
+    position: absolute;
+    width: 85px;
+    height: 5px;
+    border: 2px solid darkgoldenrod;
+    background: wheat;
+    left: 4px;
+    top: 36px;
+    border-radius: 5px;
+}
+
+.lampActive::after {
+    background: crimson;
+}
