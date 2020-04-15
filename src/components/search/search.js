@@ -7,9 +7,21 @@ function showErrorMessage(text) {
     setTimeout(() => errorMessage.classList.remove('show-error'), 4000);
 }
 
+function createButton(id) {
+    const button = document.createElement('button');
+    button.className = 'buttons__item';
+    button.id = id;
+    if (id === 'button0') {
+        button.classList.add('buttons__item-check');
+    }
+    return button;
+}
+
 function showResults(films) {
     const slider = document.getElementById('containerSlides');
+    const buttons = document.getElementById('buttons');
     slider.innerHTML = '';
+    buttons.innerHTML = '';
     for (let i = 0, len = films.length; i < len; i += 1) {
         const slide = document.createElement('div');
         slide.className = 'slider__slides-item';
@@ -39,6 +51,7 @@ function showResults(films) {
         slide.append(img);
         slide.append(wrap);
         slider.append(slide);
+        buttons.append(createButton(`button${i}`));
     }
 }
 
