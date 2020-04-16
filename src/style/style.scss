@@ -219,6 +219,21 @@
     overflow: hidden;
     height: 75vh;
     min-height: 533px;
+
+    &__keyboard {
+        width: 100%;
+        position: absolute;
+        z-index: 99;
+        top: 105px;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .main {
+        &__keyboard {
+          top: 115px;
+        }
+    }
 }
 
 .search {
@@ -342,6 +357,7 @@
             top: 52px;
             color: crimson;
             font-size: 20px;
+            z-index: 99;
         }
         &-error:before {
             content: "";
@@ -351,11 +367,6 @@
             background-image: -webkit-gradient(linear, left top, left bottom, from(#212124), to(#a072ad));
             margin: -28px 0px -8px 30px;
             clip-path: polygon(50% 0, 0% 100%, 100% 100%);
-        }
-
-        &__keyboard {
-            width: 100%;
-            position: absolute;
         }
     }
 }

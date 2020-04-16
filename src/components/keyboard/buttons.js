@@ -623,7 +623,6 @@ const buttons = {
     enter: {
         service: true,
         current: 'Enter',
-        write: '\n',
     },
 
     // #endregion

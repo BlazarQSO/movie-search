@@ -1,21 +1,37 @@
 .wrapper {
-    margin: 0 auto;
     width: 890px;
-    position: absolute;
-    z-index: 99;
+    margin: 0 auto;
+}
+
+@media only screen and (max-width: 1020px) {
+    .wrapper {
+        width: 667px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .wrapper {
+        width: 445px;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .wrapper {
+        width: 310px;
+    }
 }
 
 .button {
-    color: darkgreen;
+    color: #af920d;
     position: relative;
-    width: 50px;
+    width: 5.618%;
     height: 50px;
     font-size: 22px;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: "Times New Roman", Times, serif;
     margin-bottom: 5px;
     margin-left: 9px;
     border: 2px solid #927e14;
-    box-shadow: black 5px 6px 2px;
+    box-shadow: hsla(0, 0, 0, 0.75) 5px 6px 2px;
     border-radius: 5px;
     outline: none;
     text-decoration-line: none;
@@ -23,88 +39,120 @@
     user-select: none;
     padding: 0px;
     cursor: pointer;
-    background-image: -moz-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);
-    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFD700), color-stop(50, #D9CF73), color-stop(100, #8F7800));
-    background-image: -webkit-linear-gradient(top, #FFD700 0%, #D9CF73 50%, #8F7800 100%);
+    background-image: -moz-linear-gradient(top, #636398, #212124 50%, #5e4963a8);
+    background-image: -webkit-linear-gradient(top, #636398, #212124 50%, #5e4963a8);
     transition: color 0.3s, background-color 0.3s, box-shadow 0.3s;
 }
 
 .button:hover {
     background-image: none;
     background-color: burlywood;
-    color: blue;
+    color: #040313e0;
     box-shadow: black 3px 4px 2px;
     outline: none;
     text-decoration-line: none;
     text-decoration: none;
 }
 
+@media only screen and (max-width: 1020px) {
+    .button {
+        margin-bottom: 3px;
+        margin-left: 3px;
+        border-radius: 2px;
+        height: 30px;
+        font-size: 15px;
+    }
+
+    .space {
+        width: 39.5%;
+    }
+
+    .backspace {
+        width: 12.8%;
+    }
+    .backslash {
+        width: 9.4%;
+    }
+}
+@media only screen and (max-width: 700px) {
+    .button {
+        height: 27px;
+        font-size: 10px;
+    }
+    .space {
+        width: 40.5%;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .button {
+        margin-left: 2px;
+        height: 25px;
+    }
+}
+
+.press {
+    background-image: none;
+}
+
+.press,
 .button:active {
-    background-color: red;
-    color: black;
+    background-color: #130a0a4f;
+    color: white;
     box-shadow: 1px 1px 2px black;
+    text-shadow: 1px 1px 1px black, -1px -1px 1px black, 1px -1px 1px black, -1px 1px 1px black;
     outline: none;
     text-decoration-line: none;
     text-decoration: none;
 }
 
 .backspace {
-    width: 109px;
+    width: 12.25%;
 }
 
 .tab {
-    width: 80px;
+    width: 8.99%;
 }
 
 .backslash {
-    width: 79px;
+    width: 8.88%;
 }
 
 .capsLock {
-    width: 100px;
+    width: 11.24%;
 }
 
 .enter {
-    width: 118px;
+    width: 13.25%;
 }
 
 .shiftLeft {
-    width: 125px;
+    width: 14.04%;
 }
 
 .shiftRight {
-    width: 93px;
+    width: 10.45%;
 }
 
 .controlLeft {
-    width: 80px;
+    width: 8.99%;
 }
 
 .space {
-    width: 374px;
+    width: 42.02%;
 }
 
 .controlRight {
-    width: 66px;
+    width: 7.41%;
 }
 
 .delete {
-    width: 36px;
+    width: 4.04%;
     margin-left: 6px;
 }
 
-.press {
-    background-image: none;
-    text-decoration-line: none;
-    text-decoration: none;
-    background-color: red;
-    color: black;
-    box-shadow: 1px 1px 2px black;
-    outline: none;
-}
-
 .press:hover {
-    background-color: red;
+    background-color: #130a0a4f;
 }
 
 .info {
@@ -113,18 +161,58 @@
     color: goldenrod;
 }
 
-.lampActive::after, .lamp::after {
-    content: '';
+.lampActive::after,
+.lamp::after {
+    content: "";
     position: absolute;
     width: 85px;
     height: 5px;
     border: 2px solid darkgoldenrod;
-    background: wheat;
+    background: black;
     left: 4px;
     top: 36px;
     border-radius: 5px;
 }
 
 .lampActive::after {
-    background: crimson;
+    background: wheat;
+}
+
+@media only screen and (max-width: 1020px) {
+    .button:active {
+        text-shadow: none;
+    }
+    .lampActive::after,
+    .lamp::after {
+        width: 63px;
+        height: 3px;
+        border: 1px solid #b8860b;
+        left: 4px;
+        top: 21px;
+    }
+}
+
+@media only screen and (max-width: 700px) {
+    .button:active {
+        text-shadow: none;
+    }
+    .lampActive::after,
+    .lamp::after {
+        width: 41px;
+        left: 2px;
+        top: 17px;
+        border-radius: 3px;
+    }
+}
+
+@media only screen and (max-width: 460px) {
+    .button:active {
+        text-shadow: none;
+    }
+    .lampActive::after,
+    .lamp::after {
+        width: 27px;
+        height: 2px;
+        left: 1px;
+    }
 }

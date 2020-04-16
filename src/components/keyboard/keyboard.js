@@ -1,7 +1,7 @@
 import getRequest from '../search/search';
 
 export default class Keyboard {
-    constructor(buttons, input, cols = 60, viewRow = 7, rowHeight = 30.5) {
+    constructor(buttons, input) {
         this.shiftL = false;
         this.shiftR = false;
         this.ctrlL = false;
@@ -10,11 +10,6 @@ export default class Keyboard {
         this.altR = false;
         this.caps = false;
         this.ctrlAlt = false;
-        this.scroll = 0;
-        this.viewRow = viewRow - 1;
-        this.inputFrame = [0, this.viewRow];
-        this.cols = cols;
-        this.rowHeight = rowHeight;
         this.lang = sessionStorage.getItem('lang') || 'firstLang';
         this.buttons = buttons;
         this.input = input;
@@ -69,7 +64,6 @@ export default class Keyboard {
         keyboard.addEventListener('mouseup', this.mouseUp.bind(this), false);
         this.input.addEventListener('mouseup', this.mouseInputUp.bind(this), false);
         this.input.addEventListener('mousedown', this.setSelection.bind(this), false);
-        document.getElementById('enter').addEventListener('click', getRequest);
 
         this.keyDown = this.keyDown.bind(this);
         document.getElementById('body').addEventListener('keydown', this.keyDown, false);
@@ -77,6 +71,7 @@ export default class Keyboard {
         document.getElementById('body').addEventListener('keyup', this.keyUp, false);
         this.keyDefault = this.keyDefault.bind(this);
         window.addEventListener('blur', this.keyDefault, false);
+        window.addEventListener('resize', this.changeText);
     }
 
     writeLetter(current) {
@@ -139,6 +134,9 @@ export default class Keyboard {
                 break;
             case 'arrowUp':
                 this.buttonArrowUp();
+                break;
+            case 'enter':
+                getRequest();
                 break;
             default:
                 break;
@@ -507,9 +505,26 @@ export default class Keyboard {
         this.inputFrame[1] = rowScroll + this.viewRow;
     }
 
+    changeText() {
+        try {
+            if (window.innerWidth <= 460) {
+                document.getElementById('delete').innerHTML = 'D';
+                document.getElementById('capsLock').innerHTML = 'Caps';
+                document.getElementById('backspace').innerHTML = 'Back';
+            } else {
+                document.getElementById('delete').innerHTML = 'Del';
+                document.getElementById('capsLock').innerHTML = 'CapsLock';
+                document.getElementById('backspace').innerHTML = 'BackSpace';
+            }
+        } catch (error) {
+            this.error = error.message;
+        }
+    }
+
     destructorEvent() {
         document.getElementById('body').removeEventListener('keydown', this.keyDown, false);
         document.getElementById('body').removeEventListener('keyup', this.keyUp, false);
         window.removeEventListener('blur', this.keyDefault, false);
+        window.removeEventListener('resize', this.changeText);
     }
 }
