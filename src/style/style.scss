@@ -452,6 +452,8 @@
         width: 1060px;
         overflow: hidden;
         position: relative;
+        user-select: none;
+        cursor: pointer;
 
         &-item {
             width: 235px;

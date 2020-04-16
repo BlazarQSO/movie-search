@@ -9,7 +9,7 @@
     }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 710px) {
     .wrapper {
         width: 445px;
     }
@@ -74,7 +74,7 @@
         width: 9.4%;
     }
 }
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 710px) {
     .button {
         height: 27px;
         font-size: 10px;
@@ -190,9 +190,26 @@
         left: 4px;
         top: 21px;
     }
+    .tab,
+    .capsLock,
+    .shiftLeft,
+    .controlLeft,
+    .backquote {
+        margin-left: 22px;
+    }
 }
 
-@media only screen and (max-width: 700px) {
+@media only screen and (max-width: 750px) {
+    .tab,
+    .capsLock,
+    .shiftLeft,
+    .controlLeft,
+    .backquote {
+        margin-left: 8px;
+    }
+}
+
+@media only screen and (max-width: 710px) {
     .button:active {
         text-shadow: none;
     }
