@@ -19,6 +19,8 @@ export default class Slider {
         this.moveLeft = this.moveLeft.bind(this);
         this.moveRight = this.moveRight.bind(this);
         this.buttonEvent = this.buttonEvent.bind(this);
+        this.touchStart = this.touchStart.bind(this);
+        this.moveHandler = this.moveHandler.bind(this);
     }
 
     initDraw() {
@@ -134,7 +136,7 @@ export default class Slider {
     startEvents() {
         this.stateEvent = true;
         this.containerSlider.addEventListener('mousedown', this.mouseDown);
-        this.containerSlider.addEventListener('touchstart', this.mouseDown);
+        this.containerSlider.addEventListener('touchstart', this.touchStart, { passive: false, capture: true });
         document.getElementById('buttons').addEventListener('click', this.buttonEvent);
         this.rightBtn.addEventListener('click', this.moveRight);
         this.leftBtn.addEventListener('click', this.moveLeft);
@@ -154,17 +156,24 @@ export default class Slider {
         }
     }
 
+    touchStart(event) {
+        event.preventDefault();
+        this.startX = event.changedTouches[0].pageX;
+        this.containerSlider.classList.add('cancel-transform');
+        this.deltaX = 0;
+        this.containerSlider.addEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
+        this.containerSlider.ontouchend = this.upHandler.bind(this);
+    }
+
     mouseDown(event) {
         event.preventDefault();
-        this.startX = event.clientX || event.changedTouches[0].pageX;
+        this.startX = event.clientX;
         this.containerSlider.classList.add('cancel-transform');
         this.deltaX = 0;
 
-        this.containerSlider.onmousemove = this.moveHandler.bind(this);
-        this.containerSlider.ontouchmove = this.moveHandler.bind(this);
+        this.containerSlider.onmousemove = this.moveHandler;
         this.containerSlider.onmouseup = this.upHandler.bind(this);
         this.containerSlider.onmouseleave = this.upHandler.bind(this);
-        this.containerSlider.ontouchend = this.upHandler.bind(this);
     }
 
     upHandler() {
@@ -172,7 +181,7 @@ export default class Slider {
         this.containerSlider.onmouseup = null;
         this.containerSlider.ontouchend = null;
         this.containerSlider.onmouseleave = null;
-        this.containerSlider.ontouchmove = null;
+        this.containerSlider.removeEventListener('touchmove', this.moveHandler);
 
         this.containerSlider.classList.remove('cancel-transform');
         const NO_SWIPE = 40;
