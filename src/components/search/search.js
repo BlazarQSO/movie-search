@@ -1,10 +1,11 @@
 /* eslint-disable no-await-in-loop */
+import Slider from '../slider/slider';
 
 function showErrorMessage(text) {
     const errorMessage = document.getElementById('error');
-    errorMessage.innerHTML = `Search Error: ${text}`;
+    errorMessage.innerHTML = `No results for ${text}`;
     errorMessage.classList.add('show-error');
-    setTimeout(() => errorMessage.classList.remove('show-error'), 4000);
+    setTimeout(() => errorMessage.classList.remove('show-error'), 3000);
 }
 
 function createButton(id) {
@@ -92,9 +93,28 @@ async function getTranslate() {
     return Promise.reject(new Error('error'));
 }
 
-export default async function getRequest() {
+
+function buttonClick(e, slider) {
+    if (e.target.tagName === 'BUTTON') {
+        if (!e.target.classList.contains('buttons__item-check')) {
+            slider.buttonClick(+e.target.id.replace('button', ''));
+        }
+    }
+}
+
+function createInstanceSlider() {
+    const rightBtn = document.getElementById('right');
+    const leftBtn = document.getElementById('left');
+    const slider = new Slider('containerSlides', 265, 'slider__slides-item', leftBtn, rightBtn);
+    rightBtn.onclick = slider.moveRight.bind(slider);
+    leftBtn.onclick = slider.moveLeft.bind(slider);
+
+    document.getElementById('buttons').addEventListener('click', (e) => buttonClick(e, slider));
+}
+
+export default async function getRequest(myRequest) {
     try {
-        const translate = await getTranslate();
+        const translate = myRequest || await getTranslate();
 
         // getFilms()
         //     .then((res) => { translate = res; })
@@ -122,11 +142,11 @@ export default async function getRequest() {
                     });
                 }
                 showResults(films);
+                createInstanceSlider();
             } else {
                 showErrorMessage(translate);
             }
         }
-        document.getElementById('rating').innerHTML = `${films[0].rank} ${films[0].year}`;
     } catch (error) {
         this.errorGetRequest = error.message;
     }
