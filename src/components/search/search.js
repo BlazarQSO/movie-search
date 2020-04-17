@@ -8,7 +8,11 @@ function showErrorMessage(text, translate) {
         errorMessage.classList.add('show-tranlate');
         errorMessage.classList.add('show-error');
     } else {
-        errorMessage.innerHTML = `No results for ${text}`;
+        if (text === 'Input text!') {
+            errorMessage.innerHTML = text;
+        } else {
+            errorMessage.innerHTML = `No results for ${text}`;
+        }
         errorMessage.classList.add('show-error');
     }
     setTimeout(() => {
@@ -86,15 +90,19 @@ async function getRankingAll(ranks) {
 
 async function getTranslate(text) {
     try {
-        const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
-        const response = await fetch(urlTranslate);
-        if (response.statusText !== 'Bad Request') {
-            const json = await response.json();
-            if (json) {
-                return Promise.resolve(json.text[0]);
+        if (text !== '') {
+            const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
+            const response = await fetch(urlTranslate);
+            if (response.statusText !== 'Bad Request') {
+                const json = await response.json();
+                if (json) {
+                    return Promise.resolve(json.text[0]);
+                }
+            } else {
+                showErrorMessage(text);
             }
         } else {
-            showErrorMessage(text);
+            showErrorMessage('Input text!');
         }
         return Promise.reject(new Error('error'));
     } catch (error) {
@@ -123,10 +131,10 @@ export default async function getRequest(myRequest) {
             const jsonSearch = await responseSearch.json();
             if (jsonSearch.Response !== 'False') {
                 const searchFilms = jsonSearch.Search;
-                const MAX_SEARCH_ITEM = 10;
+                const MAX_SEARCH = 10;
                 const ranks = [];
 
-                for (let i = 0, len = searchFilms.length; i < len && i < MAX_SEARCH_ITEM; i += 1) {
+                for (let i = 0, len = searchFilms.length; i < len && i < MAX_SEARCH; i += 1) {
                     ranks.push(searchFilms[i].imdbID);
                     films.push({
                         title: searchFilms[i].Title,

@@ -149,7 +149,6 @@ export default class Slider {
     buttonEvent(e) {
         if (e.target.tagName === 'BUTTON') {
             if (!e.target.classList.contains('buttons__item-check')) {
-                clearInterval(this.interval);
                 this.buttonClick(+e.target.id.replace('button', ''));
             }
         }

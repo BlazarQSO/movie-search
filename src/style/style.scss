@@ -541,11 +541,9 @@
     }
 }
 
-.load {
-    img {
-        width: 100%;
-        opacity: 1;
-    }
+.load .slider__slides-item img{
+    width: 100%;
+    opacity: 1;
 }
 
 .cancel-transform .slider__slides-item {

@@ -64,7 +64,6 @@ export default class Keyboard {
         keyboard.addEventListener('mousedown', this.mouseDown.bind(this), false);
         keyboard.addEventListener('mouseup', this.mouseUp.bind(this), false);
         this.input.addEventListener('mouseup', this.mouseInputUp.bind(this), false);
-        this.input.addEventListener('mousedown', this.setSelection.bind(this), false);
 
         this.keyDown = this.keyDown.bind(this);
         document.getElementById('body').addEventListener('keydown', this.keyDown, false);
