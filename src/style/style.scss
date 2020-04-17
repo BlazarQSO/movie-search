@@ -303,7 +303,6 @@
         &-input {
             width: 80%;
             font-size: 26px;
-            color: rgb(105, 49, 105);
             padding-left: 50px;
             margin-bottom: 10px;
             box-sizing: border-box;
@@ -314,7 +313,7 @@
             opacity: 0.9;
             background: rgba(0, 0, 0, 0.8);
             color: gold;
-            text-shadow: -1px 1px 0px white;
+            text-shadow: 1px 1px 0px white;
             border: 2px solid #c288d4;
             background-image: url(../img/icon/search.png);
             background-repeat: no-repeat;
@@ -614,6 +613,10 @@
 
 .poster {
     display: flex;
+}
+
+.suspend {
+    opacity: 0.4;
 }
 
 @media only screen and (max-width: 660px) {

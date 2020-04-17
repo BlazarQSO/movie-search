@@ -12,10 +12,13 @@ export default class Slider {
         this.currentImg = this.length * 9999;
         this.blockSize = blockSize;
         this.styleClass = styleClass;
-        this.leftBtn = leftBtn;
-        this.rightBtn = rightBtn;
-        this.swiperEvents();
-        this.initDraw();
+        this.init = false;
+        this.leftBtn = document.getElementById(leftBtn);
+        this.rightBtn = document.getElementById(rightBtn);
+        this.mouseDown = this.mouseDown.bind(this);
+        this.moveLeft = this.moveLeft.bind(this);
+        this.moveRight = this.moveRight.bind(this);
+        this.buttonEvent = this.buttonEvent.bind(this);
     }
 
     initDraw() {
@@ -34,7 +37,9 @@ export default class Slider {
             offset += 1;
             fragmentItems.append(item);
         }
+
         this.containerSlider.append(fragmentItems);
+        this.startEvents();
     }
 
     moveRight(e, id = false) {
@@ -85,16 +90,18 @@ export default class Slider {
     buttonClick(id) {
         let offSet = (this.currentImg % this.length) - id;
         if (offSet < 0) {
+            this.moveRight(id);
             const interval = setInterval(() => {
+                if (offSet >= -2) clearInterval(interval);
                 this.moveRight(id);
                 offSet += 1;
-                if (offSet >= 0) clearInterval(interval);
             }, 200);
         } else {
+            this.moveLeft(id);
             const intervalLeft = setInterval(() => {
+                if (offSet <= 2) clearInterval(intervalLeft);
                 this.moveLeft(id);
                 offSet -= 1;
-                if (offSet <= 0) clearInterval(intervalLeft);
             }, 200);
         }
     }
@@ -107,9 +114,36 @@ export default class Slider {
         document.getElementById(`button${btnId}`).classList.add('buttons__item-check');
     }
 
-    swiperEvents() {
-        this.containerSlider.addEventListener('mousedown', this.mouseDown.bind(this));
-        this.containerSlider.addEventListener('touchstart', this.mouseDown.bind(this));
+    stopEvents() {
+        this.stateEvent = false;
+        this.containerSlider.removeEventListener('mousedown', this.mouseDown);
+        this.containerSlider.removeEventListener('touchstart', this.mouseDown);
+        document.getElementById('buttons').removeEventListener('click', this.buttonEvent);
+        this.rightBtn.removeEventListener('click', this.moveRight);
+        this.leftBtn.removeEventListener('click', this.moveLeft);
+    }
+
+    startEvents() {
+        this.stateEvent = true;
+        this.containerSlider.addEventListener('mousedown', this.mouseDown);
+        this.containerSlider.addEventListener('touchstart', this.mouseDown);
+        document.getElementById('buttons').addEventListener('click', this.buttonEvent);
+        this.rightBtn.addEventListener('click', this.moveRight);
+        this.leftBtn.addEventListener('click', this.moveLeft);
+    }
+
+    changeStateButtons() {
+        this.leftBtn.classList.toggle('suspend');
+        this.rightBtn.classList.toggle('suspend');
+        document.getElementById('buttons').classList.toggle('suspend');
+    }
+
+    buttonEvent(e) {
+        if (e.target.tagName === 'BUTTON') {
+            if (!e.target.classList.contains('buttons__item-check')) {
+                this.buttonClick(+e.target.id.replace('button', ''));
+            }
+        }
     }
 
     mouseDown(event) {

@@ -1,5 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import Slider from '../slider/slider';
+import imges from '../../img/default.png';
 
 function showErrorMessage(text) {
     const errorMessage = document.getElementById('error');
@@ -23,27 +24,26 @@ function showResults(films) {
     const buttons = document.getElementById('buttons');
     slider.innerHTML = '';
     buttons.innerHTML = '';
+    while (films.length < 5) films.push(films[0]);
+
     for (let i = 0, len = films.length; i < len; i += 1) {
         const slide = document.createElement('div');
         slide.className = 'slider__slides-item';
-        slide.id = `slide${i}`;
         const link = document.createElement('a');
         link.className = 'slider__slides-link';
-        link.id = `link${i}`;
+        link.href = films[i].href;
         link.innerHTML = films[i].title;
         const img = document.createElement('img');
-        img.id = `img${i}`;
-        img.src = films[i].poster;
+        img.src = (films[i].poster !== 'N/A') ? films[i].poster : imges;
+        img.setAttribute('alt', '');
 
         const wrap = document.createElement('div');
         wrap.className = 'slider__slides-wrap';
         const year = document.createElement('span');
         year.className = 'slider__slides-year';
-        year.id = `year${i}`;
         year.innerHTML = films[i].year;
         const rating = document.createElement('span');
         rating.className = 'slider__slides-rating';
-        rating.id = `rank${i}`;
         rating.innerHTML = films[i].rank;
 
         wrap.append(year);
@@ -68,7 +68,7 @@ async function getRanking(imdbID) {
             return Promise.resolve('-');
         }
     } catch (error) {
-        this.errorGetRanking = error.message;
+        getRanking.error = error.message;
     }
     return Promise.reject(new Error('error'));
 }
@@ -88,33 +88,37 @@ async function getTranslate() {
         }
         return Promise.reject(new Error('error'));
     } catch (error) {
-        this.errorgetTranslate = error.message;
+        getTranslate.error = error.message;
     }
     return Promise.reject(new Error('error'));
 }
 
 
-function buttonClick(e, slider) {
-    if (e.target.tagName === 'BUTTON') {
-        if (!e.target.classList.contains('buttons__item-check')) {
-            slider.buttonClick(+e.target.id.replace('button', ''));
-        }
-    }
-}
+// function buttonClick(e, slider) {
+//     if (e.target.tagName === 'BUTTON') {
+//         if (!e.target.classList.contains('buttons__item-check')) {
+//             slider.buttonClick(+e.target.id.replace('button', ''));
+//         }
+//     }
+// }
 
+let slider;
 function createInstanceSlider() {
-    const rightBtn = document.getElementById('right');
-    const leftBtn = document.getElementById('left');
-    const slider = new Slider('containerSlides', 265, 'slider__slides-item', leftBtn, rightBtn);
-    rightBtn.onclick = slider.moveRight.bind(slider);
-    leftBtn.onclick = slider.moveLeft.bind(slider);
-
-    document.getElementById('buttons').addEventListener('click', (e) => buttonClick(e, slider));
+    // const rightBtn = document.getElementById('right');
+    // const leftBtn = document.getElementById('left');
+    // slider = new Slider('containerSlides', 265, 'slider__slides-item', leftBtn, rightBtn);
+    // rightBtn.onclick = slider.moveRight.bind(slider);
+    // leftBtn.onclick = slider.moveLeft.bind(slider);
+    // document.getElementById('buttons').onclick = (e) => buttonClick(e, slider);
+    if (slider) slider.stopEvents();
+    slider = null;
+    slider = new Slider('containerSlides', 265, 'slider__slides-item', 'left', 'right');
+    slider.initDraw();
 }
 
 export default async function getRequest(myRequest) {
     try {
-        const translate = myRequest || await getTranslate();
+        const translate = (myRequest === 'terminator') ? myRequest : await getTranslate();
 
         // getFilms()
         //     .then((res) => { translate = res; })
@@ -136,6 +140,7 @@ export default async function getRequest(myRequest) {
                     // .catch((err) => { this.getRequest.error = err; });
                     films.push({
                         title: searchFilms[i].Title,
+                        href: `https://imdb.com/title/${imdbID}/videogallery`,
                         year: searchFilms[i].Year,
                         poster: searchFilms[i].Poster,
                         rank: ranking,
@@ -148,6 +153,6 @@ export default async function getRequest(myRequest) {
             }
         }
     } catch (error) {
-        this.errorGetRequest = error.message;
+        getRequest.error = error.message;
     }
 }

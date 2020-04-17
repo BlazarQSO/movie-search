@@ -55,6 +55,7 @@ export default class Keyboard {
         document.getElementById('capsLock').classList.add('lamp');
         document.getElementById('arrowUp').classList.add('small-font');
         document.getElementById('arrowDown').classList.add('small-font');
+        this.changeText();
         this.input.focus();
     }
 
