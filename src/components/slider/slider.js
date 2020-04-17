@@ -110,110 +110,66 @@ export default class Slider {
     swiperEvents() {
         this.containerSlider.addEventListener('mousedown', this.mouseDown.bind(this));
         this.containerSlider.addEventListener('touchstart', this.mouseDown.bind(this));
-        // this.containerSlider.ondrag = null;
-        // this.containerSlider.ondragdrop = null;
-        // this.containerSlider.ondragstart = null;
-
-        // this.containerSlider.addEventListener('mouseup', this.mouseUp.bind(this));
-        // this.containerSlider.addEventListener('mousemove', this.mouseMove.bind(this));
-        // this.containerSlider.addEventListener('mouseleave', this.mouseUp.bind(this));
-
-        // this.containerSlider.addEventListener('touchstart', this.touchStart);
-        // this.containerSlider.addEventListener('touchmove', this.touchMove);
-        // this.containerSlider.addEventListener('touchend', this.touchEnd);
     }
 
     mouseDown(event) {
-        // this.mouseEventDown = true;
-        // this.startX = e.clientX;
-        // this.startY = e.clientY;
-
-        // function mouseMove(event) {
-        //     const deltaX = this.startX - event.clientX;
-        //     // this.startX = e.clientX;
-        //     const newSlides = this.containerSlider.children;
-        //     let newOffset = this.visibleSlides;
-        //     for (let i = newSlides.length - 1; i >= 0; i -= 1) {
-        // newSlides[i].style.transform=`translate3d(${newOffset*this.blockSize+deltaX}px,0,0)`;
-        //         newOffset -= 1;
-        //     }
-        // }
-
-        // const listenerMouseMove = mouseMove.bind(this);
-        // function mouseUp() {
-        //     this.containerSlider.removeEventListener('mousemove', listenerMouseMove);
-        // }
-
-        // this.containerSlider.addEventListener('mouseup', mouseUp.bind(this));
-        // this.containerSlider.addEventListener('mousemove', listenerMouseMove);
-        // //  this.containerSlider.addEventListener('mouseleave', this.mouseUp);
         event.preventDefault();
-        const startX = event.clientX || event.changedTouches[0].pageX;
-        // const startY = e.clientY;
-        // const elemX = this.containerSlider.offsetLeft;
-        // // const elemY = this.containerSlider.offsetTop;
-        // const deltaX = startX - elemX;
-        // const deltaY = startY - elemY;
-        let deltaX = 0;
-        function moveHandler(e) {
-            deltaX = e.clientX - startX || e.changedTouches[0].pageX - startX;
-            // startX = event.clientX;
-            // startX = event.clientX;
-            // const moveY = event.clientY - deltaY;
+        this.startX = event.clientX || event.changedTouches[0].pageX;
+        this.containerSlider.classList.add('cancel-transform');
+        this.deltaX = 0;
+
+        this.containerSlider.onmousemove = this.moveHandler.bind(this);
+        this.containerSlider.ontouchmove = this.moveHandler.bind(this);
+        this.containerSlider.onmouseup = this.upHandler.bind(this);
+        this.containerSlider.onmouseleave = this.upHandler.bind(this);
+        this.containerSlider.ontouchend = this.upHandler.bind(this);
+    }
+
+    upHandler() {
+        this.containerSlider.onmousemove = null;
+        this.containerSlider.onmouseup = null;
+        this.containerSlider.ontouchend = null;
+        this.containerSlider.onmouseleave = null;
+        this.containerSlider.ontouchmove = null;
+
+        this.containerSlider.classList.remove('cancel-transform');
+        const NO_SWIPE = 40;
+        if (Math.abs(this.deltaX) > NO_SWIPE) {
+            if (this.deltaX < 0) {
+                this.moveRight();
+            } else {
+                this.moveLeft();
+            }
+        } else {
             let newOffset = this.visibleSlides;
             for (let i = this.containerSlider.children.length - 1; i >= 0; i -= 1) {
-                // const style = window.getComputedStyle(this.containerSlider.children[i], null);
-                // let transform = style.getPropertyValue('transform');
-                // transform = transform.replace('matrix(1, 0, 0, 1, ', '');
-                // transform = +transform.replace(', 0)', '');
-                // this.containerSlider.children[i].style.transform = `translate3d(${transform + moveX}px, 0, 0)`;
-                this.containerSlider.children[i].style.transform = `translate3d(${newOffset * this.blockSize + deltaX}px,0,0)`;
+                this.containerSlider.children[i].style.transform = `translate3d(${newOffset * this.blockSize}px,0,0)`;
                 newOffset -= 1;
             }
-            // if (Math.abs(deltaX) >= this.blockSize) {
-            //     const count = Math.abs(deltaX) / this.blockSize;
-            //     deltaX -= count * this.blockSize;
-            //     startX -= count * this.blockSize;
-            //     // if (deltaX > 0) {
-            //     //     this.draw(-1);
-            //     // } else {
-            //     //     this.draw();
-            //     // }
-            // }
+        }
+    }
+
+    moveHandler(e) {
+        const clientX = e.clientX || e.changedTouches[0].pageX;
+        this.deltaX = clientX - this.startX;
+        let newOffset = this.visibleSlides;
+        for (let i = this.containerSlider.children.length - 1; i >= 0; i -= 1) {
+            const position = newOffset * this.blockSize + this.deltaX;
+            this.containerSlider.children[i].style.transform = `translate3d(${position}px,0,0)`;
+            newOffset -= 1;
         }
 
-        function upHandler(e) {
-            this.containerSlider.onmousemove = null;
-            this.containerSlider.onmouseup = null;
-            this.containerSlider.ontouchend = null;
-            const deltaStartToEnd = e.clientX - startX || e.changedTouches[0].pageX - startX;
-            if (Math.abs(deltaStartToEnd) > 20) {
-                if (deltaStartToEnd > 0) {
-                    this.moveLeft();
-                    let offset = deltaStartToEnd / this.blockSize;
-                    if (offset > 1) {
-                        const interval = setInterval(() => {
-                            offset -= 1;
-                            if (offset <= 1) clearInterval(interval);
-                            this.moveLeft();
-                        }, 200);
-                    }
-                } else {
-                    this.moveRight();
-                    let offset = deltaStartToEnd / this.blockSize;
-                    if (offset < -1) {
-                        const intervalLeft = setInterval(() => {
-                            offset += 1;
-                            if (offset >= -1) clearInterval(intervalLeft);
-                            this.moveRight();
-                        }, 200);
-                    }
-                }
+        if (Math.abs(this.deltaX) >= this.blockSize) {
+            if (this.deltaX < 0) {
+                this.startX = clientX;
+                this.draw();
+                this.containerSlider.children[0].remove();
+            } else {
+                this.startX = clientX;
+                this.draw(-1);
+                const len = this.containerSlider.children.length;
+                this.containerSlider.children[len - 1].remove();
             }
         }
-
-        // this.containerSlider.onmousemove = moveHandler.bind(this);
-        this.containerSlider.onmouseup = upHandler.bind(this);
-        this.containerSlider.ontouchend = upHandler.bind(this);
     }
 }
