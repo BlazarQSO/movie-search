@@ -425,13 +425,21 @@ export default class Keyboard {
 
     buttonArrowDown() {
         const len = this.input.value.length;
-        this.input.selectionStart = len;
-        this.input.selectionEnd = len;
+        if (this.shiftL || this.shiftR) {
+            this.input.selectionEnd = len;
+        } else {
+            this.input.selectionStart = len;
+            this.input.selectionEnd = len;
+        }
     }
 
     buttonArrowUp() {
-        this.input.selectionStart = 0;
-        this.input.selectionEnd = 0;
+        if (this.shiftL || this.shiftR) {
+            this.input.selectionStart = 0;
+        } else {
+            this.input.selectionStart = 0;
+            this.input.selectionEnd = 0;
+        }
     }
 
     redrawLetters() {
