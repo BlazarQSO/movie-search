@@ -2,11 +2,20 @@
 import Slider from '../slider/slider';
 import imges from '../../img/default.png';
 
-function showErrorMessage(text) {
+function showErrorMessage(text, translate) {
     const errorMessage = document.getElementById('error');
-    errorMessage.innerHTML = `No results for ${text}`;
-    errorMessage.classList.add('show-error');
-    setTimeout(() => errorMessage.classList.remove('show-error'), 3000);
+    if (translate) {
+        errorMessage.innerHTML = `Showing results for ${text}`;
+        errorMessage.classList.add('show-tranlate');
+        errorMessage.classList.add('show-error');
+    } else {
+        errorMessage.innerHTML = `No results for ${text}`;
+        errorMessage.classList.add('show-error');
+    }
+    setTimeout(() => {
+        errorMessage.classList.remove('show-tranlate');
+        errorMessage.classList.remove('show-error');
+    }, 5000);
 }
 
 function createButton(id) {
@@ -41,10 +50,10 @@ function showResults(films) {
         wrap.className = 'slider__slides-wrap';
         const year = document.createElement('span');
         year.className = 'slider__slides-year';
-        year.innerHTML = films[i].year;
+        year.innerHTML = (films[i].year !== 'N/A') ? films[i].year : '--';
         const rating = document.createElement('span');
         rating.className = 'slider__slides-rating';
-        rating.innerHTML = films[i].rank;
+        rating.innerHTML = (films[i].rank !== 'N/A') ? films[i].rank : '--';
 
         wrap.append(year);
         wrap.append(rating);
@@ -73,9 +82,8 @@ async function getRanking(imdbID) {
     return Promise.reject(new Error('error'));
 }
 
-async function getTranslate() {
+async function getTranslate(text) {
     try {
-        const text = document.getElementById('input').value;
         const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
         const response = await fetch(urlTranslate);
         if (response.statusText !== 'Bad Request') {
@@ -93,23 +101,8 @@ async function getTranslate() {
     return Promise.reject(new Error('error'));
 }
 
-
-// function buttonClick(e, slider) {
-//     if (e.target.tagName === 'BUTTON') {
-//         if (!e.target.classList.contains('buttons__item-check')) {
-//             slider.buttonClick(+e.target.id.replace('button', ''));
-//         }
-//     }
-// }
-
 let slider;
 function createInstanceSlider() {
-    // const rightBtn = document.getElementById('right');
-    // const leftBtn = document.getElementById('left');
-    // slider = new Slider('containerSlides', 265, 'slider__slides-item', leftBtn, rightBtn);
-    // rightBtn.onclick = slider.moveRight.bind(slider);
-    // leftBtn.onclick = slider.moveLeft.bind(slider);
-    // document.getElementById('buttons').onclick = (e) => buttonClick(e, slider);
     if (slider) slider.stopEvents();
     slider = null;
     slider = new Slider('containerSlides', 265, 'slider__slides-item', 'left', 'right');
@@ -118,7 +111,8 @@ function createInstanceSlider() {
 
 export default async function getRequest(myRequest) {
     try {
-        const translate = (myRequest === 'terminator') ? myRequest : await getTranslate();
+        const text = document.getElementById('input').value;
+        const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
 
         // getFilms()
         //     .then((res) => { translate = res; })
@@ -147,9 +141,12 @@ export default async function getRequest(myRequest) {
                     });
                 }
                 showResults(films);
+                if (text !== translate && myRequest !== 'terminator') {
+                    showErrorMessage(translate, true);
+                }
                 createInstanceSlider();
             } else {
-                showErrorMessage(translate);
+                showErrorMessage(translate, false);
             }
         }
     } catch (error) {
