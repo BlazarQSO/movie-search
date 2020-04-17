@@ -12,6 +12,7 @@ function createInput(text) {
     input.placeholder = 'Search movie';
     input.value = text;
     input.setAttribute('autocomplete', 'off');
+    input.setAttribute('maxlength', 80);
     document.getElementById('searchWrap').prepend(input);
     input.focus();
 }

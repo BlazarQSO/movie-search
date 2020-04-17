@@ -77,15 +77,16 @@ export default class Keyboard {
     writeLetter(current) {
         const select = this.input.selectionStart;
         let text = this.input.value;
-
-        text = text.substring(0, select) + current + text.substring(select, text.length);
-        this.input.value = text;
-        if (current !== '    ') {
-            this.input.selectionStart = select + 1;
-            this.input.selectionEnd = select + 1;
-        } else {
-            this.input.selectionStart = select + 4;
-            this.input.selectionEnd = select + 4;
+        if (text.length <= 80) {
+            text = text.substring(0, select) + current + text.substring(select, text.length);
+            this.input.value = text;
+            if (current !== '    ') {
+                this.input.selectionStart = select + 1;
+                this.input.selectionEnd = select + 1;
+            } else {
+                this.input.selectionStart = select + 4;
+                this.input.selectionEnd = select + 4;
+            }
         }
     }
 

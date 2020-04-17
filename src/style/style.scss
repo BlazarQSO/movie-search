@@ -345,7 +345,6 @@
         &-error {
             display: none;
             width: 80%;
-            height: 80px;
             padding-left: 10px;
             padding-right: 10px;
             padding-top: 10px;
@@ -361,7 +360,7 @@
             text-shadow: 1px 1px 10px white, 1px 1px 1px black;
             z-index: 99;
             word-break: break-all;
-            overflow: hidden;
+            min-height: 80px;
         }
         &-error:before {
             content: "";

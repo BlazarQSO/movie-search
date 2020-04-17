@@ -88,9 +88,10 @@ async function getRankingAll(ranks) {
     return Promise.reject(new Error('error'));
 }
 
-async function getTranslate(text) {
+async function getTranslate(value) {
     try {
-        if (text !== '') {
+        if (value !== '') {
+            const text = (value.length > 80) ? value.slice(0, 80) : value;
             const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
             const response = await fetch(urlTranslate);
             if (response.statusText !== 'Bad Request') {
