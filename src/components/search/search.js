@@ -29,6 +29,7 @@ function createButton(id) {
 
 function showResults(films) {
     const slider = document.getElementById('containerSlides');
+    slider.classList.remove('load');
     const buttons = document.getElementById('buttons');
     slider.innerHTML = '';
     buttons.innerHTML = '';
@@ -41,6 +42,7 @@ function showResults(films) {
         link.className = 'slider__slides-link';
         link.href = films[i].href;
         link.innerHTML = films[i].title;
+        link.setAttribute('target', '_blank');
         const img = document.createElement('img');
         img.src = (films[i].poster !== 'N/A') ? films[i].poster : imges;
         img.setAttribute('alt', '');
@@ -62,6 +64,7 @@ function showResults(films) {
         slider.append(slide);
         buttons.append(createButton(`button${i}`));
     }
+    setTimeout(() => slider.classList.add('load'), 500);
 }
 
 async function getRankingAll(ranks) {

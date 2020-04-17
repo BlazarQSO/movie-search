@@ -507,13 +507,6 @@ export default class Keyboard {
             });
     }
 
-    setSelection() {
-        this.scroll = this.input.scrollTop;
-        const rowScroll = Math.round(this.scroll / this.rowHeight);
-        this.inputFrame[0] = rowScroll;
-        this.inputFrame[1] = rowScroll + this.viewRow;
-    }
-
     changeText() {
         try {
             if (window.innerWidth <= 460) {

@@ -44,7 +44,7 @@ function getRequestEnter(e) {
 
 window.addEventListener('load', () => {
     getRequest('terminator');
-    document.getElementById('search').addEventListener('click', getRequest);
+    document.getElementById('search').onclick = getRequest;
     document.body.addEventListener('keydown', getRequestEnter);
     document.getElementById('key').addEventListener('click', showKeyboard);
     document.getElementById('input').focus();

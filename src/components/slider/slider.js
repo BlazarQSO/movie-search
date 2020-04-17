@@ -12,7 +12,7 @@ export default class Slider {
         this.currentImg = this.length * 9999;
         this.blockSize = blockSize;
         this.styleClass = styleClass;
-        this.init = false;
+        this.interval = false;
         this.leftBtn = document.getElementById(leftBtn);
         this.rightBtn = document.getElementById(rightBtn);
         this.mouseDown = this.mouseDown.bind(this);
@@ -90,19 +90,27 @@ export default class Slider {
     buttonClick(id) {
         let offSet = (this.currentImg % this.length) - id;
         if (offSet < 0) {
+            clearInterval(this.interval);
             this.moveRight(id);
-            const interval = setInterval(() => {
-                if (offSet >= -2) clearInterval(interval);
-                this.moveRight(id);
-                offSet += 1;
-            }, 200);
+            offSet += 1;
+            if (offSet <= -1) {
+                this.interval = setInterval(() => {
+                    if (offSet >= -1) clearInterval(this.interval);
+                    offSet += 1;
+                    this.moveRight(id);
+                }, 200);
+            }
         } else {
             this.moveLeft(id);
-            const intervalLeft = setInterval(() => {
-                if (offSet <= 2) clearInterval(intervalLeft);
-                this.moveLeft(id);
-                offSet -= 1;
-            }, 200);
+            clearInterval(this.interval);
+            offSet -= 1;
+            if (offSet >= 1) {
+                this.interval = setInterval(() => {
+                    if (offSet <= 1) clearInterval(this.interval);
+                    offSet -= 1;
+                    this.moveLeft(id);
+                }, 200);
+            }
         }
     }
 
@@ -141,6 +149,7 @@ export default class Slider {
     buttonEvent(e) {
         if (e.target.tagName === 'BUTTON') {
             if (!e.target.classList.contains('buttons__item-check')) {
+                clearInterval(this.interval);
                 this.buttonClick(+e.target.id.replace('button', ''));
             }
         }
