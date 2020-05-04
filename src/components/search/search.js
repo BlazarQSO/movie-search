@@ -137,6 +137,22 @@ function createInstanceSlider() {
     slider.initDraw();
 }
 
+async function getListFilms(jsonSearch, translate) {
+    let searchFilms = jsonSearch.Search;
+
+    const MAX_PAGES = 10;
+    const pages = Math.ceil(jsonSearch.totalResults / MAX_PAGES);
+    const urlPages = [];
+    for (let i = 2; i <= pages && i <= MAX_PAGES; i += 1) {
+        urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=825f3e2`);
+    }
+    if (urlPages.length > 0) {
+        const filmsFromPages = await getFilmsFromPages(urlPages);
+        searchFilms = searchFilms.concat(...filmsFromPages.map((item) => item.Search));
+    }
+    return Promise.resolve(searchFilms);
+}
+
 export default async function getRequest(myRequest) {
     try {
         const text = document.getElementById('input').value;
@@ -148,20 +164,7 @@ export default async function getRequest(myRequest) {
         if (responseSearch) {
             const jsonSearch = await responseSearch.json();
             if (jsonSearch.Response !== 'False') {
-                let searchFilms = jsonSearch.Search;
-
-
-                const pages = Math.ceil(jsonSearch.totalResults / 10);
-                const MAX_PAGES = 10;
-                const urlPages = [];
-                for (let i = 2; i <= pages && i <= MAX_PAGES; i += 1) {
-                    urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=825f3e2`);
-                }
-                if (urlPages.length > 0) {
-                    const filmsFromPages = await getFilmsFromPages(urlPages);
-                    searchFilms = searchFilms.concat(...filmsFromPages.map((item) => item.Search));
-                }
-
+                const searchFilms = await getListFilms(jsonSearch, translate);
                 const MAX_SEARCH = 100;
                 const ranks = [];
 

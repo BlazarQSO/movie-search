@@ -9,7 +9,8 @@ export default class Slider {
             item.remove();
         });
         this.length = this.slider.length;
-        this.currentImg = this.length * 9999;
+        this.POSITIVE_VALUE_OF_SLIDER = 9999;
+        this.currentImg = this.length * this.POSITIVE_VALUE_OF_SLIDER;
         this.blockSize = blockSize;
         this.styleClass = styleClass;
         this.interval = false;
@@ -53,7 +54,7 @@ export default class Slider {
         });
         this.draw();
         newSlides[0].remove();
-        if (id === false) this.setBtnBackground();
+        if (id === false) this.setBtnBackground(false);
     }
 
     moveLeft(e, id = false) {
@@ -65,7 +66,7 @@ export default class Slider {
         }
         this.draw(-1);
         newSlides[newSlides.length - 1].remove();
-        if (id === false) this.setBtnBackground();
+        if (id === false) this.setBtnBackground(true);
     }
 
     draw(direction = 1) {
@@ -85,12 +86,15 @@ export default class Slider {
             this.containerSlider.prepend(item);
         }
         if (this.currentImg === 0) {
-            this.currentImg = this.length * 9999;
+            this.currentImg = this.length * this.POSITIVE_VALUE_OF_SLIDER;
         }
     }
 
     buttonClick(id) {
-        let offSet = (this.currentImg % this.length) - id;
+        const buttons = document.getElementById('buttons').children;
+        const indexClick = Array.from(buttons).findIndex((item) => item.id === id);
+        const indexCheck = Array.from(buttons).findIndex((item) => item.classList.contains('buttons__item-check'));
+        let offSet = indexCheck - indexClick;
         if (offSet < 0) {
             clearInterval(this.interval);
             this.moveRight(id);
@@ -116,12 +120,33 @@ export default class Slider {
         }
     }
 
-    setBtnBackground() {
-        Array.from(document.getElementById('buttons').children).forEach((item) => {
+    setBtnBackground(left) {
+        const buttons = document.getElementById('buttons').children;
+        Array.from(buttons).forEach((item) => {
             item.classList.remove('buttons__item-check');
         });
-        const btnId = this.currentImg % this.length;
-        document.getElementById(`button${btnId}`).classList.add('buttons__item-check');
+        const buttonsId = Array.from(buttons).map((item) => +item.id.replace('button', ''));
+        const slideId = this.currentImg % this.length;
+        if (left && !buttonsId.includes(slideId)) {
+            for (let i = 1; i < buttons.length; i += 1) {
+                if (slideId + i < this.length) {
+                    buttons[i].id = `button${slideId + i}`;
+                } else {
+                    buttons[i].id = `button${slideId + i - this.length}`;
+                }
+            }
+            buttons[0].id = `button${slideId}`;
+        } else if (!left && !buttonsId.includes(slideId)) {
+            for (let i = 1; i < buttons.length; i += 1) {
+                if (slideId - i >= 0) {
+                    buttons[buttons.length - 1 - i].id = `button${slideId - i}`;
+                } else {
+                    buttons[buttons.length - 1 - i].id = `button${this.length + (slideId - i)}`;
+                }
+            }
+            buttons[buttons.length - 1].id = `button${slideId}`;
+        }
+        document.getElementById(`button${slideId}`).classList.add('buttons__item-check');
     }
 
     stopEvents() {
@@ -151,7 +176,7 @@ export default class Slider {
     buttonEvent(e) {
         if (e.target.tagName === 'BUTTON') {
             if (!e.target.classList.contains('buttons__item-check')) {
-                this.buttonClick(+e.target.id.replace('button', ''));
+                this.buttonClick(e.target.id);
             }
         }
     }
@@ -159,6 +184,7 @@ export default class Slider {
     touchStart(event) {
         event.preventDefault();
         this.startX = event.changedTouches[0].pageX;
+        this.staticStart = this.startX;
         this.containerSlider.classList.add('cancel-transform');
         this.deltaX = 0;
         this.containerSlider.addEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
@@ -168,6 +194,7 @@ export default class Slider {
     mouseDown(event) {
         event.preventDefault();
         this.startX = event.clientX;
+        this.staticStart = this.startX;
         this.containerSlider.classList.add('cancel-transform');
         this.deltaX = 0;
 
@@ -176,7 +203,7 @@ export default class Slider {
         this.containerSlider.onmouseleave = this.upHandler.bind(this);
     }
 
-    upHandler() {
+    upHandler(e) {
         this.containerSlider.onmousemove = null;
         this.containerSlider.onmouseup = null;
         this.containerSlider.ontouchend = null;
@@ -197,6 +224,9 @@ export default class Slider {
                 this.containerSlider.children[i].style.transform = `translate3d(${newOffset * this.blockSize}px,0,0)`;
                 newOffset -= 1;
             }
+            const clientX = e.clientX || e.changedTouches[0].pageX;
+            const direction = clientX - this.staticStart > 0;
+            this.setBtnBackground(direction);
         }
     }
 
