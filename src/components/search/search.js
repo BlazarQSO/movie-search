@@ -37,6 +37,10 @@ function showResults(films) {
     const buttons = document.getElementById('buttons');
     slider.innerHTML = '';
     buttons.innerHTML = '';
+    const MAX_BUTTONS = 10;
+    for (let i = 0; i < films.length && i < MAX_BUTTONS; i += 1) {
+        buttons.append(createButton(`button${i}`));
+    }
     while (films.length < 5) films.push(films[0]);
 
     for (let i = 0, len = films.length; i < len; i += 1) {
@@ -66,7 +70,6 @@ function showResults(films) {
         slide.append(img);
         slide.append(wrap);
         slider.append(slide);
-        buttons.append(createButton(`button${i}`));
     }
     setTimeout(() => slider.classList.add('load'), 500);
 }
@@ -87,6 +90,20 @@ async function getRankingAll(ranks) {
     }
     return Promise.reject(new Error('error'));
 }
+
+
+async function getFilmsFromPages(urlPages) {
+    try {
+        const request = urlPages.map((url) => fetch(url));
+        const promises = await Promise.all(request);
+        const jsons = await Promise.all(promises.map((response) => response.json()));
+        return Promise.resolve(jsons);
+    } catch (error) {
+        getRankingAll.error = error.message;
+    }
+    return Promise.reject(new Error('error'));
+}
+
 
 async function getTranslate(value) {
     try {
@@ -131,19 +148,34 @@ export default async function getRequest(myRequest) {
         if (responseSearch) {
             const jsonSearch = await responseSearch.json();
             if (jsonSearch.Response !== 'False') {
-                const searchFilms = jsonSearch.Search;
-                const MAX_SEARCH = 10;
+                let searchFilms = jsonSearch.Search;
+
+
+                const pages = Math.ceil(jsonSearch.totalResults / 10);
+                const MAX_PAGES = 10;
+                const urlPages = [];
+                for (let i = 2; i <= pages && i <= MAX_PAGES; i += 1) {
+                    urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=825f3e2`);
+                }
+                if (urlPages.length > 0) {
+                    const filmsFromPages = await getFilmsFromPages(urlPages);
+                    searchFilms = searchFilms.concat(...filmsFromPages.map((item) => item.Search));
+                }
+
+                const MAX_SEARCH = 100;
                 const ranks = [];
 
                 for (let i = 0, len = searchFilms.length; i < len && i < MAX_SEARCH; i += 1) {
-                    ranks.push(searchFilms[i].imdbID);
-                    films.push({
-                        title: searchFilms[i].Title,
-                        href: `https://imdb.com/title/${searchFilms[i].imdbID}/videogallery`,
-                        year: searchFilms[i].Year,
-                        poster: searchFilms[i].Poster,
-                        rank: '--',
-                    });
+                    if (searchFilms[i].Type === 'movie' || searchFilms[i].Type === 'series') {
+                        ranks.push(searchFilms[i].imdbID);
+                        films.push({
+                            title: searchFilms[i].Title,
+                            href: `https://imdb.com/title/${searchFilms[i].imdbID}/videogallery`,
+                            year: searchFilms[i].Year,
+                            poster: searchFilms[i].Poster,
+                            rank: '--',
+                        });
+                    }
                 }
                 const allRanks = await getRankingAll(ranks);
                 allRanks.forEach((item, index) => { films[index].rank = (item) ? item.imdbRating : '--'; });
