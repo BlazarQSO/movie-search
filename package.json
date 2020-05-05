@@ -10,12 +10,19 @@
     "start": "webpack-dev-server --history-api-fallback --inline --open",
     "build": "npm run clear -s && webpack --progress",
     "lint": "eslint ./**/*.js",
-    "clear": "del-cli dist"
+    "clear": "del-cli dist",
+    "test": "jest"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      ".+\\.(css|styl|less|sass|scss|png|jpg|ttf|woff|woff2)$": "identity-obj-proxy"
+    }
   },
   "author": "Siarhei Iukou",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.6.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.9.6",
     "@babel/preset-env": "^7.6.0",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
@@ -36,7 +43,10 @@
     "file-loader": "^4.2.0",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
+    "identity-obj-proxy": "^3.0.0",
     "image-webpack-loader": "^6.0.0",
+    "jest": "^26.0.1",
+    "jsdom": "^16.2.2",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.13.0",
     "postcss-loader": "^3.0.0",

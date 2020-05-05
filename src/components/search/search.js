@@ -104,7 +104,6 @@ async function getFilmsFromPages(urlPages) {
     return Promise.reject(new Error('error'));
 }
 
-
 async function getTranslate(value) {
     try {
         if (value !== '') {
@@ -196,3 +195,9 @@ export default async function getRequest(myRequest) {
         getRequest.error = error.message;
     }
 }
+
+export {
+    getTranslate,
+    getRankingAll,
+    getFilmsFromPages,
+};
