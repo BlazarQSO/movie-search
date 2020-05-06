@@ -386,7 +386,23 @@
             right: 50px;
             z-index: 9;
         }
+
+        &-loading {
+            display: none;
+            position: absolute;
+            width: 45px;
+            height: 45px;
+            left: -50px;
+            top: 0;
+            z-index: 9;
+        }
     }
+}
+
+.loading {
+    background-image: url(../img/loading.gif);
+    background-repeat: no-repeat;
+    background-position: right 0px top;
 }
 
 .focus {
@@ -396,7 +412,7 @@
 .show-error {
     display: block;
 }
-.show-tranlate {
+.show-translate {
     color: white;
 }
 

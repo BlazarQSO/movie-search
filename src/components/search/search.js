@@ -5,7 +5,7 @@ function showErrorMessage(text, translate) {
     const errorMessage = document.getElementById('error');
     if (translate) {
         errorMessage.innerHTML = `Showing results for ${text}`;
-        errorMessage.classList.add('show-tranlate');
+        errorMessage.classList.add('show-translate');
         errorMessage.classList.add('show-error');
     } else {
         if (text === 'Input text!') {
@@ -15,8 +15,9 @@ function showErrorMessage(text, translate) {
         }
         errorMessage.classList.add('show-error');
     }
+    document.getElementById('input').classList.remove('loading');
     setTimeout(() => {
-        errorMessage.classList.remove('show-tranlate');
+        errorMessage.classList.remove('show-translate');
         errorMessage.classList.remove('show-error');
     }, 5000);
 }
@@ -71,7 +72,10 @@ function showResults(films) {
         slide.append(wrap);
         slider.append(slide);
     }
-    setTimeout(() => slider.classList.add('load'), 500);
+    setTimeout(() => {
+        document.getElementById('input').classList.remove('loading');
+        slider.classList.add('load');
+    }, 600);
 }
 
 async function getRankingAll(ranks) {
@@ -152,33 +156,41 @@ async function getListFilms(jsonSearch, translate) {
     return Promise.resolve(searchFilms);
 }
 
+function createFilmsList(searchFilms) {
+    const films = [];
+    const ranks = [];
+    const MAX_SEARCH = 100;
+
+    for (let i = 0, len = searchFilms.length; i < len && i < MAX_SEARCH; i += 1) {
+        if (searchFilms[i].Type === 'movie' || searchFilms[i].Type === 'series') {
+            ranks.push(searchFilms[i].imdbID);
+            films.push({
+                title: searchFilms[i].Title,
+                href: `https://imdb.com/title/${searchFilms[i].imdbID}/videogallery`,
+                year: searchFilms[i].Year,
+                poster: searchFilms[i].Poster,
+                rank: '--',
+            });
+        }
+    }
+    return [ranks, films];
+}
+
 export default async function getRequest(myRequest) {
     try {
+        document.getElementById('input').classList.add('loading');
         const text = document.getElementById('input').value;
         const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
 
-        const films = [];
         const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=825f3e2`;
         const responseSearch = await fetch(urlSearch);
+
         if (responseSearch) {
             const jsonSearch = await responseSearch.json();
             if (jsonSearch.Response !== 'False') {
                 const searchFilms = await getListFilms(jsonSearch, translate);
-                const MAX_SEARCH = 100;
-                const ranks = [];
 
-                for (let i = 0, len = searchFilms.length; i < len && i < MAX_SEARCH; i += 1) {
-                    if (searchFilms[i].Type === 'movie' || searchFilms[i].Type === 'series') {
-                        ranks.push(searchFilms[i].imdbID);
-                        films.push({
-                            title: searchFilms[i].Title,
-                            href: `https://imdb.com/title/${searchFilms[i].imdbID}/videogallery`,
-                            year: searchFilms[i].Year,
-                            poster: searchFilms[i].Poster,
-                            rank: '--',
-                        });
-                    }
-                }
+                const [ranks, films] = createFilmsList(searchFilms);
                 const allRanks = await getRankingAll(ranks);
                 allRanks.forEach((item, index) => { films[index].rank = (item) ? item.imdbRating : '--'; });
 
@@ -195,9 +207,3 @@ export default async function getRequest(myRequest) {
         getRequest.error = error.message;
     }
 }
-
-export {
-    getTranslate,
-    getRankingAll,
-    getFilmsFromPages,
-};
