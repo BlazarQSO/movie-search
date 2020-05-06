@@ -243,6 +243,7 @@
     justify-content: center;
     padding-top: 15px;
 
+    &__wrap-speech,
     &__wrap-key,
     &__btn {
         width: 150px;
@@ -265,6 +266,7 @@
         background: rgba(0, 0, 0, 0.7);
     }
 
+    &__wrap-speech:before,
     &__wrap-key:before,
     &__btn:before {
         content: "";
@@ -277,6 +279,7 @@
         transform: skewX(-45deg);
     }
 
+    &__wrap-speech:hover,
     &__wrap-key:hover,
     &__btn:hover,
     &__btn:active {
@@ -284,12 +287,14 @@
         color: white;
     }
 
+    &__wrap-speech:hover:before,
     &__wrap-key:hover:before,
     &__btn:hover:before {
         left: 400px;
         transition: 0.5s ease-in-out;
     }
 
+    &__wrap-speech:active,
     &__wrap-key:active,
     &__btn:active {
         background-color: rgba(0, 0, 0, 0.7);
@@ -321,6 +326,7 @@
             background-position: left 1px top 1px;
         }
 
+        &-speech,
         &-key {
             position: absolute;
             width: 50px;
@@ -370,6 +376,15 @@
             background-image: -webkit-gradient(linear, left top, left bottom, from(#212124), to(#a072ad));
             margin: -28px 0px -8px 30px;
             clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+        }
+
+        &-speech {
+            background-image: url("../img/microphone.png");
+            background-size: 95% 95%;
+            background-repeat: no-repeat;
+            background-position: center;
+            right: 50px;
+            z-index: 9;
         }
     }
 }
@@ -540,7 +555,7 @@
     }
 }
 
-.load .slider__slides-item img{
+.load .slider__slides-item img {
     width: 100%;
     opacity: 1;
 }
@@ -655,4 +670,29 @@
             margin-right: 2px;
         }
     }
+}
+
+@keyframes speech {
+    0% {
+        background-size: 95% 95%;
+        box-shadow: 0 0 0 0 rgba(210, 131, 235, 0.1);
+    }
+
+    50% {
+        background-size: 70% 70%;
+        box-shadow: 0 0 0 10px rgba(210, 131, 235, 0.5);
+    }
+
+    100% {
+        background-size: 95% 95%;
+        box-shadow: 0 0 0 0 rgba(210, 131, 235, 0.1);
+    }
+}
+
+.speech {
+    animation-name: speech;
+    animation-duration: 2s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
 }

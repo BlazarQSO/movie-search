@@ -1,6 +1,7 @@
 import './style/style.scss';
 import './components/keyboard/keyboard.scss';
 import getRequest from './components/search/search';
+import Speech from './components/search/speech';
 import buttons from './components/keyboard/buttons';
 import Keyboard from './components/keyboard/keyboard';
 
@@ -48,5 +49,10 @@ window.addEventListener('load', () => {
     document.getElementById('search').onclick = getRequest;
     document.body.addEventListener('keydown', getRequestEnter);
     document.getElementById('key').addEventListener('click', showKeyboard);
-    document.getElementById('input').focus();
+
+    const input = document.getElementById('input');
+    const buttonSpeech = document.getElementById('speech');
+    const speech = new Speech(input, buttonSpeech);
+    document.getElementById('speech').addEventListener('click', speech.eventButtonSpeech.bind(speech));
+    input.focus();
 });
