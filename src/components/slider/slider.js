@@ -1,7 +1,30 @@
 export default class Slider {
     constructor(containerSlider, blockSize, styleClass, leftBtn, rightBtn, visibleSlides = 4) {
         this.slider = [];
+        this.visibleMaxSlides = visibleSlides;
         this.visibleSlides = visibleSlides;
+        this.blockSize = blockSize;
+        this.styleClass = styleClass;
+        this.interval = false;
+        this.changeSlide = true;
+        this.countShowSlides = this.countSlides();
+        this.leftBtn = document.getElementById(leftBtn);
+        this.rightBtn = document.getElementById(rightBtn);
+        this.bindMethods();
+        this.initValues(containerSlider);
+    }
+
+    bindMethods() {
+        this.mouseDown = this.mouseDown.bind(this);
+        this.moveLeft = this.moveLeft.bind(this);
+        this.moveRight = this.moveRight.bind(this);
+        this.buttonEvent = this.buttonEvent.bind(this);
+        this.touchStart = this.touchStart.bind(this);
+        this.moveHandler = this.moveHandler.bind(this);
+        this.checkSizeSlider = this.checkSizeSlider.bind(this);
+    }
+
+    initValues(containerSlider) {
         this.containerSlider = document.getElementById(containerSlider);
         const slides = this.containerSlider.children;
         Array.from(slides).forEach((item, index) => {
@@ -11,17 +34,23 @@ export default class Slider {
         this.length = this.slider.length;
         this.POSITIVE_VALUE_OF_SLIDER = 9999;
         this.currentImg = this.length * this.POSITIVE_VALUE_OF_SLIDER;
-        this.blockSize = blockSize;
-        this.styleClass = styleClass;
-        this.interval = false;
-        this.leftBtn = document.getElementById(leftBtn);
-        this.rightBtn = document.getElementById(rightBtn);
-        this.mouseDown = this.mouseDown.bind(this);
-        this.moveLeft = this.moveLeft.bind(this);
-        this.moveRight = this.moveRight.bind(this);
-        this.buttonEvent = this.buttonEvent.bind(this);
-        this.touchStart = this.touchStart.bind(this);
-        this.moveHandler = this.moveHandler.bind(this);
+
+        if (this.visibleSlides < this.countShowSlides) {
+            this.countShowSlides = this.visibleSlides;
+        }
+
+        if (this.visibleSlides >= this.length) {
+            this.visibleSlides = this.length - 1;
+        }
+    }
+
+    countSlides() {
+        const size = window.innerWidth;
+        let countSlides = this.visibleMaxSlides;
+        if (size > 1110 && size <= 1400) countSlides = 3;
+        if (size > 820 && size <= 1110) countSlides = 2;
+        if (size <= 820) countSlides = 1;
+        return countSlides;
     }
 
     initDraw() {
@@ -43,6 +72,40 @@ export default class Slider {
 
         this.containerSlider.append(fragmentItems);
         this.startEvents();
+        this.checkSizeSlider();
+    }
+
+    checkSizeSlider() {
+        const size = this.countSlides();
+        if (size >= this.length) {
+            if (this.changeSlide) {
+                this.changeSlide = false;
+                if (this.length <= size) this.containerSlider.children[0].classList.add('hide');
+                Array.from(this.containerSlider.children)
+                    .forEach((item) => item.classList.add('lock-transition'));
+                this.containerSlider.classList.add('few-slides');
+                this.leftBtn.classList.add('lock-slider');
+                this.rightBtn.classList.add('lock-slider');
+                this.rightBtn.removeEventListener('click', this.moveRight);
+                this.leftBtn.removeEventListener('click', this.moveLeft);
+                document.getElementById('buttons').removeEventListener('click', this.buttonEvent);
+                document.getElementById('buttons').classList.add('lock-slider');
+            }
+        } else if (this.containerSlider.classList.contains('few-slides')) {
+            if (!this.changeSlide) {
+                this.changeSlide = true;
+                this.containerSlider.classList.remove('few-slides');
+                setTimeout(() => Array.from(this.containerSlider.children)
+                    .forEach((item) => item.classList.remove('lock-transition')), 0);
+                this.leftBtn.classList.remove('lock-slider');
+                this.rightBtn.classList.remove('lock-slider');
+                this.rightBtn.addEventListener('click', this.moveRight);
+                this.leftBtn.addEventListener('click', this.moveLeft);
+                if (this.length > size) this.containerSlider.children[0].classList.remove('hide');
+                document.getElementById('buttons').addEventListener('click', this.buttonEvent);
+                document.getElementById('buttons').classList.remove('lock-slider');
+            }
+        }
     }
 
     moveRight(e, id = false) {
@@ -93,7 +156,8 @@ export default class Slider {
     buttonClick(id) {
         const buttons = document.getElementById('buttons').children;
         const indexClick = Array.from(buttons).findIndex((item) => item.id === id);
-        const indexCheck = Array.from(buttons).findIndex((item) => item.classList.contains('buttons__item-check'));
+        const indexCheck = Array.from(buttons)
+            .findIndex((item) => item.classList.contains('buttons__item-check'));
         let offSet = indexCheck - indexClick;
         if (offSet < 0) {
             clearInterval(this.interval);
@@ -156,15 +220,25 @@ export default class Slider {
         document.getElementById('buttons').removeEventListener('click', this.buttonEvent);
         this.rightBtn.removeEventListener('click', this.moveRight);
         this.leftBtn.removeEventListener('click', this.moveLeft);
+        window.removeEventListener('resize', this.checkSizeSlider);
+
+        this.containerSlider.classList.remove('few-slides');
+        // setTimeout(() => Array.from(this.containerSlider.children)
+        //     .forEach((item) => item.classList.remove('lock-transition')), 0);
+        this.leftBtn.classList.remove('lock-slider');
+        this.rightBtn.classList.remove('lock-slider');
+        document.getElementById('buttons').classList.remove('lock-slider');
     }
 
     startEvents() {
         this.stateEvent = true;
         this.containerSlider.addEventListener('mousedown', this.mouseDown);
-        this.containerSlider.addEventListener('touchstart', this.touchStart, { passive: false, capture: true });
+        this.containerSlider
+            .addEventListener('touchstart', this.touchStart, { passive: false, capture: true });
         document.getElementById('buttons').addEventListener('click', this.buttonEvent);
         this.rightBtn.addEventListener('click', this.moveRight);
         this.leftBtn.addEventListener('click', this.moveLeft);
+        window.addEventListener('resize', this.checkSizeSlider);
     }
 
     changeStateButtons() {
@@ -187,7 +261,8 @@ export default class Slider {
         this.staticStart = this.startX;
         this.containerSlider.classList.add('cancel-transform');
         this.deltaX = 0;
-        this.containerSlider.addEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
+        this.containerSlider
+            .addEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
         this.containerSlider.ontouchend = this.upHandler.bind(this);
     }
 

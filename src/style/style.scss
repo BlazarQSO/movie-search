@@ -674,6 +674,26 @@
     opacity: 0.4;
 }
 
+.few-slides {
+    justify-content: space-around;
+}
+.few-slides div {
+    transform: none !important;
+    position: static;
+}
+
+.lock-slider {
+    filter: saturate(0.1);
+}
+
+.hide {
+    display: none;
+}
+
+.lock-transition {
+    transition: none !important;
+}
+
 @media only screen and (max-width: 660px) {
     .buttons {
         width: 100%;

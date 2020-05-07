@@ -8,7 +8,7 @@ function showErrorMessage(text, translate) {
         errorMessage.classList.add('show-translate');
         errorMessage.classList.add('show-error');
     } else {
-        if (text === 'Input text!') {
+        if (text === 'Input text!' || text === 'Something went wrong!') {
             errorMessage.innerHTML = text;
         } else {
             errorMessage.innerHTML = `No results for ${text}`;
@@ -32,17 +32,38 @@ function createButton(id) {
     return button;
 }
 
+let slider;
+function createInstanceSlider() {
+    if (slider) slider.stopEvents();
+    slider = null;
+    slider = new Slider('containerSlides', 265, 'slider__slides-item', 'left', 'right');
+    slider.initDraw();
+}
+
+function onloadImg(loadImg, index) {
+    const img = document.createElement('img');
+    img.onerror = () => {
+        const src = '../../img/default.png';
+        slider.slider[index] = slider.slider[index].replace(img.src, src);
+        if (index < 4) {
+            document.getElementById('containerSlides').children[index + 1].children[1].src = src;
+        }
+    };
+    img.src = (loadImg !== 'N/A') ? loadImg : imges;
+    img.setAttribute('alt', 'image not found');
+    return img;
+}
+
 function showResults(films) {
-    const slider = document.getElementById('containerSlides');
-    slider.classList.remove('load');
+    const createSlider = document.getElementById('containerSlides');
+    createSlider.classList.remove('load');
     const buttons = document.getElementById('buttons');
-    slider.innerHTML = '';
+    createSlider.innerHTML = '';
     buttons.innerHTML = '';
     const MAX_BUTTONS = 10;
     for (let i = 0; i < films.length && i < MAX_BUTTONS; i += 1) {
         buttons.append(createButton(`button${i}`));
     }
-    while (films.length < 5) films.push(films[0]);
 
     for (let i = 0, len = films.length; i < len; i += 1) {
         const slide = document.createElement('div');
@@ -52,9 +73,7 @@ function showResults(films) {
         link.href = films[i].href;
         link.innerHTML = films[i].title;
         link.setAttribute('target', '_blank');
-        const img = document.createElement('img');
-        img.src = (films[i].poster !== 'N/A') ? films[i].poster : imges;
-        img.setAttribute('alt', '');
+        const img = onloadImg(films[i].poster, i);
 
         const wrap = document.createElement('div');
         wrap.className = 'slider__slides-wrap';
@@ -70,11 +89,11 @@ function showResults(films) {
         slide.append(link);
         slide.append(img);
         slide.append(wrap);
-        slider.append(slide);
+        createSlider.append(slide);
     }
     setTimeout(() => {
         document.getElementById('input').classList.remove('loading');
-        slider.classList.add('load');
+        createSlider.classList.add('load');
     }, 600);
 }
 
@@ -103,14 +122,14 @@ async function getFilmsFromPages(urlPages) {
         const jsons = await Promise.all(promises.map((response) => response.json()));
         return Promise.resolve(jsons);
     } catch (error) {
-        getRankingAll.error = error.message;
+        getFilmsFromPages.error = error.message;
     }
     return Promise.reject(new Error('error'));
 }
 
 async function getTranslate(value) {
     try {
-        if (value !== '') {
+        if (value !== '' && !value.match(/^-{0,1}\d+$/)) {
             const text = (value.length > 80) ? value.slice(0, 80) : value;
             const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
             const response = await fetch(urlTranslate);
@@ -123,21 +142,14 @@ async function getTranslate(value) {
                 showErrorMessage(text);
             }
         } else {
-            showErrorMessage('Input text!');
+            if (value === '') showErrorMessage('Input text!');
+            return Promise.resolve(value);
         }
         return Promise.reject(new Error('error'));
     } catch (error) {
         getTranslate.error = error.message;
     }
     return Promise.reject(new Error('error'));
-}
-
-let slider;
-function createInstanceSlider() {
-    if (slider) slider.stopEvents();
-    slider = null;
-    slider = new Slider('containerSlides', 265, 'slider__slides-item', 'left', 'right');
-    slider.initDraw();
 }
 
 async function getListFilms(jsonSearch, translate) {
@@ -179,10 +191,10 @@ function createFilmsList(searchFilms) {
 export default async function getRequest(myRequest) {
     try {
         document.getElementById('input').classList.add('loading');
-        const text = document.getElementById('input').value;
+        const text = document.getElementById('input').value.trim();
         const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
 
-        const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=825f3e2`;
+        const urlSearch = `http://www.omdbapi.com/?s34=${translate}&apikey=825f3e2`;
         const responseSearch = await fetch(urlSearch);
 
         if (responseSearch) {
@@ -199,6 +211,8 @@ export default async function getRequest(myRequest) {
                     showErrorMessage(translate, true);
                 }
                 createInstanceSlider();
+            } else if (jsonSearch.Error) {
+                showErrorMessage('Something went wrong!', false);
             } else {
                 showErrorMessage(translate, false);
             }
