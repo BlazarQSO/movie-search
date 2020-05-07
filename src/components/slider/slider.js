@@ -22,6 +22,7 @@ export default class Slider {
         this.touchStart = this.touchStart.bind(this);
         this.moveHandler = this.moveHandler.bind(this);
         this.checkSizeSlider = this.checkSizeSlider.bind(this);
+        this.upHandler = this.upHandler.bind(this);
     }
 
     initValues(containerSlider) {
@@ -223,8 +224,6 @@ export default class Slider {
         window.removeEventListener('resize', this.checkSizeSlider);
 
         this.containerSlider.classList.remove('few-slides');
-        // setTimeout(() => Array.from(this.containerSlider.children)
-        //     .forEach((item) => item.classList.remove('lock-transition')), 0);
         this.leftBtn.classList.remove('lock-slider');
         this.rightBtn.classList.remove('lock-slider');
         document.getElementById('buttons').classList.remove('lock-slider');
@@ -263,7 +262,7 @@ export default class Slider {
         this.deltaX = 0;
         this.containerSlider
             .addEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
-        this.containerSlider.ontouchend = this.upHandler.bind(this);
+        this.containerSlider.addEventListener('touchend', this.upHandler);
     }
 
     mouseDown(event) {
@@ -273,16 +272,17 @@ export default class Slider {
         this.containerSlider.classList.add('cancel-transform');
         this.deltaX = 0;
 
-        this.containerSlider.onmousemove = this.moveHandler;
-        this.containerSlider.onmouseup = this.upHandler.bind(this);
-        this.containerSlider.onmouseleave = this.upHandler.bind(this);
+        this.containerSlider.addEventListener('touchend', this.upHandler);
+        this.containerSlider.addEventListener('mousemove', this.moveHandler);
+        this.containerSlider.addEventListener('mouseup', this.upHandler);
+        this.containerSlider.addEventListener('mouseleave', this.upHandler);
     }
 
     upHandler(e) {
-        this.containerSlider.onmousemove = null;
-        this.containerSlider.onmouseup = null;
-        this.containerSlider.ontouchend = null;
-        this.containerSlider.onmouseleave = null;
+        this.containerSlider.removeEventListener('mousemove', this.moveHandler);
+        this.containerSlider.removeEventListener('mouseup', this.upHandler);
+        this.containerSlider.removeEventListener('touchend', this.upHandler);
+        this.containerSlider.removeEventListener('mouseleave', this.upHandler);
         this.containerSlider.removeEventListener('touchmove', this.moveHandler);
 
         this.containerSlider.classList.remove('cancel-transform');

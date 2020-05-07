@@ -194,7 +194,7 @@ export default async function getRequest(myRequest) {
         const text = document.getElementById('input').value.trim();
         const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
 
-        const urlSearch = `http://www.omdbapi.com/?s34=${translate}&apikey=825f3e2`;
+        const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=825f3e2`;
         const responseSearch = await fetch(urlSearch);
 
         if (responseSearch) {
@@ -211,10 +211,12 @@ export default async function getRequest(myRequest) {
                     showErrorMessage(translate, true);
                 }
                 createInstanceSlider();
-            } else if (jsonSearch.Error) {
-                showErrorMessage('Something went wrong!', false);
-            } else {
-                showErrorMessage(translate, false);
+            } else if (text !== '') {
+                if (jsonSearch.Error && jsonSearch.Error !== 'Movie not found!') {
+                    showErrorMessage(jsonSearch.Error, false);
+                } else {
+                    showErrorMessage(translate, false);
+                }
             }
         }
     } catch (error) {

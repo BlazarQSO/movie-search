@@ -303,7 +303,7 @@
 
     &__wrap {
         position: relative;
-        width: 60%;
+        width: 80%;
 
         &-input {
             width: 80%;
@@ -400,9 +400,10 @@
 }
 
 .loading {
-    background-image: url(../img/loading.gif);
+    background-image: url('../img/icon/search.png'),url('../img/loading.gif');
+    background-size: 45px 45px;
+    background-position: left 1px top 1px, right 0 top;
     background-repeat: no-repeat;
-    background-position: right 0px top;
 }
 
 .focus {
@@ -414,6 +415,26 @@
 }
 .show-translate {
     color: white;
+}
+
+@media only screen and (max-width: 920px) {
+    .search {
+        &__wrap {
+            &-input {
+                width: 75%;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 770px) {
+    .search {
+        &__wrap {
+            &-input {
+                width: 68%;
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: 680px) {
@@ -448,6 +469,7 @@
             margin-left: 5%;
             margin-bottom: 5px;
             margin-right: 0;
+            padding-right: 40px;
         }
 
         &__wrap {
@@ -460,16 +482,29 @@
             }
 
             &-input {
-                width: 90%;
-                font-size: 22px;
+                width: 90%!important;
+                font-size: 21px;
                 margin-bottom: 5px;
                 margin-left: 0px !important;
+                padding-right: 54px;
+            }
+
+            &-speech {
+                right: 0;
+                margin-right: 5%;
+                top: 55px;
+                border-right: 2px solid #c288d4;
             }
 
             &-error {
                 margin-top: 76px;
             }
         }
+    }
+
+
+    .loading {
+        background-position: left 1px top 1px, right 50px top;
     }
 }
 
@@ -635,6 +670,12 @@
     }
 }
 
+@media only screen and (max-width: 330px) {
+    .slider__slides {
+        margin-left: -1.5%;
+    }
+}
+
 .buttons {
     width: 80%;
     margin: 0 auto;
@@ -726,9 +767,5 @@
 }
 
 .speech {
-    animation-name: speech;
-    animation-duration: 2s;
-    animation-timing-function: ease-in-out;
-    animation-iteration-count: infinite;
-    animation-play-state: running;
+    animation: speech 2s ease-in-out running infinite;
 }
