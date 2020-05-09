@@ -62,7 +62,7 @@
     min-height: 721px;
 }
 
-@media only screen and (max-width: 460px) {
+@media only screen and (max-width: 580px) {
     .background-top,
     .background-bottom {
         min-height: 570px;
@@ -173,8 +173,15 @@
     }
 }
 
-@media only screen and (max-width: 520px) {
+@media only screen and (max-width: 580px) {
+    .header {
+        height: 100px;
+    }
     .title {
+        &__text {
+            height: 70px;
+        }
+
         &__ribbon span {
             right: -50px;
             top: 17px;
@@ -195,20 +202,6 @@
         }
     }
 }
-
-@media only screen and (max-width: 460px) {
-    .header {
-        height: 100px;
-    }
-
-    .title {
-        &__text {
-            height: 70px;
-        }
-    }
-}
-
-/* end title */
 
 /*-------------------END HEADER------------------------*/
 
@@ -256,7 +249,6 @@
         font-family: "Montserrat", sans-serif;
         transition: 0.2s ease-in-out;
         box-sizing: border-box;
-        cursor: pointer;
         border: 2px solid #c288d4;
         font-family: Montserrat, sans-serif;
         color: #c288d4;
@@ -320,10 +312,11 @@
             color: gold;
             text-shadow: 1px 1px 0px white;
             border: 2px solid #c288d4;
-            background-image: url(../img/icon/search.png);
+            background-image: url('../img/icon/search.png');
             background-repeat: no-repeat;
-            background-size: 45px 45px;
-            background-position: left 1px top 1px;
+            background-size: 40px 40px;
+            background-position: right -1px top 3px;
+            padding-right: 39px;
         }
 
         &-speech,
@@ -367,6 +360,10 @@
             z-index: 99;
             word-break: break-all;
             min-height: 80px;
+
+            span {
+                color: goldenrod;
+            }
         }
         &-error:before {
             content: "";
@@ -396,13 +393,31 @@
             top: 0;
             z-index: 9;
         }
+
+        &-reset {
+            position: absolute;
+            width: 35px;
+            height: 35px;
+            background-color: rgba(0, 0, 0, 0);
+            cursor: pointer;
+            background-image: url('../img/icon/cancel.png');
+            background-repeat: no-repeat;
+            background-size: cover;
+            z-index: 99;
+            border: 0;
+            left: 10px;
+            top: 8px;
+            margin-right: 8px;
+            outline: none;
+            transition: all 1s;
+        }
     }
 }
 
 .loading {
-    background-image: url('../img/icon/search.png'),url('../img/loading.gif');
+    background-image: url('../img/loading.gif');
     background-size: 45px 45px;
-    background-position: left 1px top 1px, right 0 top;
+    background-position: right 0 top;
     background-repeat: no-repeat;
 }
 
@@ -419,26 +434,6 @@
 
 @media only screen and (max-width: 920px) {
     .search {
-        &__wrap {
-            &-input {
-                width: 75%;
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 770px) {
-    .search {
-        &__wrap {
-            &-input {
-                width: 68%;
-            }
-        }
-    }
-}
-
-@media only screen and (max-width: 680px) {
-    .search {
         width: 100%;
 
         &__btn {
@@ -450,12 +445,27 @@
 
             &-input {
                 margin-left: 5px;
+                width: 75%;
+            }
+
+            &-reset {
+                left: 16px;
             }
         }
     }
 }
 
-@media only screen and (max-width: 460px) {
+@media only screen and (max-width: 660px) {
+    .search {
+        &__wrap {
+            &-input {
+                width: 68%;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 580px) {
     .main {
         min-height: 570px;
     }
@@ -482,11 +492,12 @@
             }
 
             &-input {
-                width: 90%!important;
-                font-size: 21px;
+                width: 90% !important;
+                font-size: 19px;
                 margin-bottom: 5px;
                 margin-left: 0px !important;
-                padding-right: 54px;
+                padding-right: 94px;
+                background-position: right 47px top 3px;
             }
 
             &-speech {
@@ -499,13 +510,29 @@
             &-error {
                 margin-top: 76px;
             }
+
+            &-reset {
+                left: 30px !important;
+            }
         }
     }
 
-
     .loading {
-        background-position: left 1px top 1px, right 50px top;
+        background-position: right 50px top;
     }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate {
+    animation: rotate 0.3s linear 1 running;
 }
 
 /*-------------------END SEARCH------------------------*/

@@ -4,14 +4,14 @@ import imges from '../../img/default.png';
 function showErrorMessage(text, translate) {
     const errorMessage = document.getElementById('error');
     if (translate) {
-        errorMessage.innerHTML = `Showing results for ${text}`;
+        errorMessage.innerHTML = `Showing results for <span>"${text}"</span>`;
         errorMessage.classList.add('show-translate');
         errorMessage.classList.add('show-error');
     } else {
         if (text === 'Input text!' || text === 'Something went wrong!') {
             errorMessage.innerHTML = text;
         } else {
-            errorMessage.innerHTML = `No results for ${text}`;
+            errorMessage.innerHTML = `No results were found for <span>"${text}"</span>`;
         }
         errorMessage.classList.add('show-error');
     }
@@ -91,6 +91,7 @@ function showResults(films) {
         slide.append(wrap);
         createSlider.append(slide);
     }
+
     setTimeout(() => {
         document.getElementById('input').classList.remove('loading');
         createSlider.classList.add('load');

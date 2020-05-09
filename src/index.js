@@ -5,6 +5,13 @@ import Speech from './components/search/speech';
 import buttons from './components/keyboard/buttons';
 import Keyboard from './components/keyboard/keyboard';
 
+function clearInput(reset, input) {
+    input.value = '';
+    reset.classList.add('rotate');
+    input.focus();
+    setTimeout(() => reset.classList.remove('rotate'), 1100);
+}
+
 function createInput(text) {
     const input = document.createElement('input');
     input.id = 'input';
@@ -16,6 +23,8 @@ function createInput(text) {
     input.setAttribute('maxlength', 80);
     document.getElementById('searchWrap').prepend(input);
     input.focus();
+    const reset = document.getElementById('reset');
+    reset.addEventListener('click', clearInput.bind(null, reset, input));
 }
 
 let keyboard;
@@ -51,8 +60,10 @@ window.addEventListener('load', () => {
     document.getElementById('key').addEventListener('click', showKeyboard);
 
     const input = document.getElementById('input');
+    const reset = document.getElementById('reset');
     const buttonSpeech = document.getElementById('speech');
     const speech = new Speech(input, buttonSpeech);
     document.getElementById('speech').addEventListener('click', speech.eventButtonSpeech.bind(speech));
+    reset.addEventListener('click', clearInput.bind(null, reset, input));
     input.focus();
 });

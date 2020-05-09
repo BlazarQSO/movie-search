@@ -54,6 +54,11 @@
     text-decoration: none;
 }
 
+.button:active {
+    background-image: none;
+    background-color: burlywood;
+}
+
 @media only screen and (max-width: 1020px) {
     .button {
         margin-bottom: 3px;
