@@ -159,10 +159,4 @@ const config = {
     },
 };
 
-if (isProd) {
-    config.plugins.push(
-        new UglifyJSPlugin(),
-    );
-}
-
 module.exports = config;

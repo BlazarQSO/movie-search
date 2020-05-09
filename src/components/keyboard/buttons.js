@@ -824,9 +824,11 @@ const buttons = {
         service: true,
         current: 'Alt',
     },
-    controlRight: {
+    language: {
         service: true,
-        current: 'Ctrl',
+        firstLang: 'EN',
+        secondLang: 'RU',
+        current: 'EN',
     },
     arrowLeft: {
         service: true,

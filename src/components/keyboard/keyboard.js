@@ -112,8 +112,8 @@ export default class Keyboard {
             case 'controlLeft':
                 this.buttonCtrlDown('left');
                 break;
-            case 'controlRight':
-                this.buttonCtrlDown('right');
+            case 'language':
+                this.changeLanguage();
                 break;
             case 'altLeft':
                 this.buttonAltDown('left');
@@ -341,6 +341,8 @@ export default class Keyboard {
         this.ctrlL = (direction === 'left') ? true : this.ctrlL;
         this.ctrlR = (direction === 'right') ? true : this.ctrlR;
         if ((this.altL || this.altR) && !this.ctrlAlt) {
+            const language = document.getElementById('language');
+            language.innerHTML = (language.innerHTML === 'EN') ? 'RU' : 'EN';
             this.lang = (this.lang === 'firstLang') ? 'secondLang' : 'firstLang';
             sessionStorage.setItem('lang', this.lang);
             this.ctrlAlt = true;
@@ -360,6 +362,8 @@ export default class Keyboard {
         this.altL = (direction === 'left') ? true : this.altL;
         this.altR = (direction === 'right') ? true : this.altR;
         if ((this.ctrlL || this.ctrlR) && !this.ctrlAlt) {
+            const language = document.getElementById('language');
+            language.innerHTML = (language.innerHTML === 'EN') ? 'RU' : 'EN';
             this.lang = (this.lang === 'firstLang') ? 'secondLang' : 'firstLang';
             sessionStorage.setItem('lang', this.lang);
             this.ctrlAlt = true;
@@ -373,6 +377,13 @@ export default class Keyboard {
         if (!this.altL && !this.altR) {
             this.ctrlAlt = false;
         }
+    }
+
+    changeLanguage() {
+        this.lang = (this.lang === 'firstLang') ? 'secondLang' : 'firstLang';
+        document.getElementById('language').innerHTML = (this.lang === 'firstLang') ? 'EN' : 'RU';
+        sessionStorage.setItem('lang', this.lang);
+        this.redrawLetters();
     }
 
     buttonCapsDown() {
@@ -509,6 +520,8 @@ export default class Keyboard {
 
     changeText() {
         try {
+            const language = document.getElementById('language');
+            language.innerHTML = (this.lang === 'firstLang') ? 'EN' : 'RU';
             if (window.innerWidth <= 460) {
                 document.getElementById('delete').innerHTML = 'D';
                 document.getElementById('capsLock').innerHTML = 'Caps';

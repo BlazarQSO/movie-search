@@ -1,5 +1,6 @@
 import Slider from '../slider/slider';
 import imges from '../../img/default.png';
+import { movies } from './moviesList';
 
 function showErrorMessage(text, translate) {
     const errorMessage = document.getElementById('error');
@@ -95,7 +96,7 @@ function showResults(films) {
     setTimeout(() => {
         document.getElementById('input').classList.remove('loading');
         createSlider.classList.add('load');
-    }, 600);
+    }, 1000);
 }
 
 async function getRankingAll(ranks) {
@@ -212,6 +213,10 @@ export default async function getRequest(myRequest) {
                     showErrorMessage(translate, true);
                 }
                 createInstanceSlider();
+            } else if (jsonSearch.Error === 'Request limit reached!') {
+                showResults(movies);
+                createInstanceSlider();
+                showErrorMessage(jsonSearch.Error, false);
             } else if (text !== '') {
                 if (jsonSearch.Error && jsonSearch.Error !== 'Movie not found!') {
                     showErrorMessage(jsonSearch.Error, false);
