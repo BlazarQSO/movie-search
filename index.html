@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Movie Search</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="shortcut icon" href="./img/icon/logo.png" type="image/png">
+</head>
+
+<body class="body" id="body">
+    <header class="header">
+        <div class="title">
+            <div class="title__ribbon">
+                <span>Сinema</span>
+            </div>
+            <h1 class="title__text">Movie Search</h1>
+        </div>
+    </header>
+    <main class="main">
+        <div class="main__keyboard" id="wrapKeyboard"></div>
+        <section class="search">
+            <div class="search__wrap" id="searchWrap">
+                <input class="search__wrap-input" type="text" id="input" autocomplete="off" placeholder="Search movie" maxlength="80" />
+                <button type="button" class="search__wrap-reset" id="reset"></button>
+                <button type="button" class="search__wrap-speech" id="speech"></button>
+                <button type="button" class="search__wrap-key" id="key"></button>
+                <p class="search__wrap-error" id="error">No results for</p>
+            </div>
+            <button class="search__btn" id="search" type="button">Search</button>
+        </section>
+        <section class="slider" id="slider">
+            <div class="slider__arrow" id="left">
+                <img src="./src/img/icon/arrow-left.png" class="slider__item-arrow-left" width="100" height="100"
+                    alt="" />
+            </div>
+            <figure class="slider__slides" id="containerSlides">
+            </figure>
+            <div class="slider__arrow" id="right">
+                <img src="./src/img/icon/arrow-right.png" class="slider__item-arrow-right" width="100" height="100"
+                    alt="" />
+            </div>
+        </section>
+        <div class="buttons" id="buttons"></div>
+        <div class="background-top"></div>
+        <div class="background-bottom"></div>
+    </main>
+    <div class="background-body-t"></div>
+</body>
+
+</html>

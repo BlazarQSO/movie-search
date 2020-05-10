@@ -1,0 +1,131 @@
+.header {
+    width: 100%;
+    height: 140px;
+    padding-top: 20px;
+}
+
+.title {
+    position: relative;
+    width: 50%;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    transition: 1s;
+
+    &__ribbon {
+        width: 140px;
+        height: 140px;
+        overflow: hidden;
+        position: absolute;
+        top: -10px;
+        left: -10px;
+    }
+    &__ribbon::before,
+    &__ribbon::after {
+        position: absolute;
+        z-index: -1;
+        content: "";
+        display: block;
+        border: 5px solid gray;
+    }
+
+    &__ribbon span {
+        position: absolute;
+        display: block;
+        width: 225px;
+        padding: 15px 0;
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#212124), to(#a072ad));
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        color: gold;
+        font: 700 18px/1 "Lato", sans-serif;
+        text-shadow: 1px 1px 0 #bcbcbc, 2px 2px 0 #9c9c9c, 0 1px 8px rgba(255, 255, 255, 0.5),
+            0 1px 5px rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    &__ribbon::before,
+    &__ribbon::after {
+        border-top-color: transparent;
+        border-left-color: transparent;
+    }
+
+    &__ribbon::before {
+        top: 0;
+        right: 0;
+    }
+    &__ribbon::after {
+        bottom: 0;
+        left: 0;
+    }
+    &__ribbon span {
+        right: -25px;
+        top: 30px;
+        transform: rotate(-45deg);
+    }
+
+    &__text {
+        margin: 0;
+        padding: 0;
+        color: #92a5de;
+        background: -webkit-linear-gradient(top, #212124, #c288d4);
+        background: -moz-linear-gradient(top, #212124, #c288d4);
+        background: -o-linear-gradient(top, #212124, #c288d4);
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#212124), to(#c288d4));
+        text-shadow: 0px 0px 0 #899cd5, 1px 1px 0 #8194cd, 2px 2px 0 #788bc4, 3px 3px 0 #6f82bb, 4px 4px 0 #677ab3,
+            5px 5px 0 #5e71aa, 6px 6px 0 #5568a1, 7px 7px 0 #4c5f98, 8px 8px 0 #445790, 9px 9px 0 #3b4e87,
+            10px 10px 0 #32457e, 11px 11px 0 #2a3d76, 12px 12px 0 #21346d, 13px 13px 0 #182b64, 14px 14px 0 #0f225b,
+            15px 15px 0 #071a53, 16px 16px 0 #02114a, 17px 17px 0 #0b0841, 18px 18px 0 #130039, 19px 19px 0 #1c0930,
+            20px 20px 0 #251227, 21px 21px 20px rgba(0, 0, 0, 1), 21px 21px 1px rgba(0, 0, 0, 0.5),
+            0px 0px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        height: 110px;
+        font-size: 60px;
+        padding-top: 30px;
+        transition: 1s;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    .title {
+        width: 90%;
+    }
+}
+@media only screen and (max-width: 680px) {
+    .title {
+        &__text {
+            font-size: 40px;
+            padding-right: 10px;
+        }
+    }
+}
+
+@media only screen and (max-width: 580px) {
+    .header {
+        height: 100px;
+    }
+    .title {
+        &__text {
+            height: 70px;
+        }
+
+        &__ribbon span {
+            right: -50px;
+            top: 17px;
+            transform: rotate(-45deg);
+            width: 328px;
+            padding: 6px 0;
+            font-size: 12px;
+        }
+
+        &__ribbon:before {
+            top: 0px;
+            right: 68px;
+        }
+
+        &__ribbon:after {
+            bottom: 68px;
+            left: 0;
+        }
+    }
+}
