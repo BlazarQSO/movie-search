@@ -111,7 +111,7 @@ async function getRankingAll(ranks) {
     try {
         const urls = [];
         ranks.forEach((item) => {
-            urls.push(`https://www.omdbapi.com/?i=${item}&apikey=3167cb24`);
+            urls.push(`https://www.omdbapi.com/?i=${item}&apikey=825f3e2`);
         });
 
         const request = urls.map((url) => fetch(url));
@@ -170,7 +170,7 @@ async function getListFilms(jsonSearch, translate) {
     const pages = Math.ceil(jsonSearch.totalResults / MAX_PAGES);
     const urlPages = [];
     for (let i = 2; i <= pages && i <= MAX_PAGES; i += 1) {
-        urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=3167cb24`);
+        urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=825f3e2`);
     }
     if (urlPages.length > 0) {
         const filmsFromPages = await getFilmsFromPages(urlPages);
@@ -204,35 +204,36 @@ export default async function getRequest(myRequest) {
         document.getElementById('input').classList.add('loading');
         const text = document.getElementById('input').value.trim();
         const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
+        if (translate !== '') {
+            const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=825f3e2`;
+            const responseSearch = await fetch(urlSearch);
 
-        const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=3167cb24`;
-        const responseSearch = await fetch(urlSearch);
+            if (responseSearch) {
+                const jsonSearch = await responseSearch.json();
+                if (jsonSearch.Response !== 'False') {
+                    const searchFilms = await getListFilms(jsonSearch, translate);
 
-        if (responseSearch) {
-            const jsonSearch = await responseSearch.json();
-            if (jsonSearch.Response !== 'False') {
-                const searchFilms = await getListFilms(jsonSearch, translate);
+                    const [ranks, films] = createFilmsList(searchFilms);
+                    const allRanks = await getRankingAll(ranks);
+                    allRanks.forEach((item, index) => { films[index].rank = (item) ? item.imdbRating : '--'; });
 
-                const [ranks, films] = createFilmsList(searchFilms);
-                const allRanks = await getRankingAll(ranks);
-                allRanks.forEach((item, index) => { films[index].rank = (item) ? item.imdbRating : '--'; });
-
-                showResults(films);
-                if (text !== translate && myRequest !== 'terminator') {
-                    showErrorMessage(translate, true);
-                }
-                createInstanceSlider();
-            } else if (jsonSearch.Error === 'Request limit reached!') {
-                showResults(movies);
-                createInstanceSlider();
-                showErrorMessage(jsonSearch.Error, false);
-            } else if (text !== '') {
-                if (jsonSearch.Error && jsonSearch.Error !== 'Movie not found!') {
+                    showResults(films);
+                    if (text !== translate && myRequest !== 'terminator') {
+                        showErrorMessage(translate, true);
+                    }
+                    createInstanceSlider();
+                } else if (jsonSearch.Error === 'Request limit reached!') {
+                    showResults(movies);
+                    createInstanceSlider();
+                    showErrorMessage(jsonSearch.Error, false);
+                } else if (jsonSearch.Error && jsonSearch.Error !== 'Movie not found!') {
                     showErrorMessage(jsonSearch.Error, false);
                 } else {
                     showErrorMessage(translate, false);
                 }
             }
+        } else {
+            showErrorMessage('Input text!', false);
         }
     } catch (error) {
         getRequest.error = error.message;
