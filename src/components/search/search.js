@@ -45,10 +45,17 @@ function createInstanceSlider() {
 function onloadImg(loadImg, index) {
     const img = document.createElement('img');
     img.onerror = () => {
-        const src = './img/default.png';
+        const src = '../../img/default.png';
         slider.slider[index] = slider.slider[index].replace(img.src, src);
-        if (index < slider.visibleMaxSlides) {
-            document.getElementById('containerSlides').children[index + 1].children[1].src = src;
+        if (index < slider.visibleMaxSlides * 2) {
+            document.getElementById('containerSlides')
+                .children[index + slider.visibleSlides].children[1].src = src;
+            if (slider.visibleMaxSlides >= slider.length) {
+                document.getElementById('containerSlides')
+                    .children[index].children[1].src = src;
+                document.getElementById('containerSlides')
+                    .children[index + 2 * slider.length].children[1].src = src;
+            }
         }
     };
     img.src = (loadImg !== 'N/A') ? loadImg : imges;

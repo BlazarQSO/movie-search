@@ -41,7 +41,7 @@ export default class Slider {
         }
 
         if (this.visibleSlides >= this.length) {
-            this.visibleSlides = this.length - 1;
+            this.visibleSlides = this.length;
         }
     }
 
@@ -58,15 +58,17 @@ export default class Slider {
     }
 
     initDraw() {
-        let offset = -1;
+        let offset = -this.visibleSlides;
         const fragmentItems = new DocumentFragment();
-        const WITH_INVISIBLE_LEFT_RIGHT_SLIDE = 1 + this.visibleSlides + 1;
-        for (let i = 0; i < WITH_INVISIBLE_LEFT_RIGHT_SLIDE; i += 1) {
+        const LEFT_INVISIBLE = this.visibleSlides;
+        const RIGHT_INVISIBLE = this.visibleSlides;
+        const EXISTING_SLIDES = LEFT_INVISIBLE + this.visibleSlides + RIGHT_INVISIBLE;
+        for (let i = 0; i < EXISTING_SLIDES; i += 1) {
             const item = document.createElement('div');
             if (offset < 0) {
-                item.innerHTML = this.slider[this.length - 1];
+                item.innerHTML = this.slider[this.length + offset];
             } else {
-                item.innerHTML = this.slider[offset];
+                item.innerHTML = this.slider[offset % this.length];
             }
             item.classList.add(this.styleClass);
             item.style.transform = `translate3d(${offset * this.blockSize}px, 0, 0)`;
@@ -84,7 +86,7 @@ export default class Slider {
         if (size >= this.length) {
             if (this.changeSlide) {
                 this.changeSlide = false;
-                if (this.length <= size) this.containerSlider.children[0].classList.add('hide');
+                if (this.length <= size) this.hideLeftRightSlides(true);
                 Array.from(this.containerSlider.children)
                     .forEach((item) => item.classList.add('lock-transition'));
                 this.containerSlider.classList.add('few-slides');
@@ -109,7 +111,7 @@ export default class Slider {
                 this.rightBtn.classList.remove('lock-slider');
                 this.rightBtn.addEventListener('click', this.moveRight);
                 this.leftBtn.addEventListener('click', this.moveLeft);
-                if (this.length > size) this.containerSlider.children[0].classList.remove('hide');
+                if (this.length > size) this.hideLeftRightSlides(false);
                 document.getElementById('buttons').addEventListener('click', this.buttonEvent);
                 document.getElementById('buttons').classList.remove('lock-slider');
                 this.containerSlider.addEventListener('mousedown', this.mouseDown);
@@ -120,9 +122,24 @@ export default class Slider {
         }
     }
 
+    hideLeftRightSlides(isHide) {
+        const { length } = this.containerSlider.children;
+        if (isHide) {
+            for (let i = 0; i < this.length; i += 1) {
+                this.containerSlider.children[i].classList.add('hide');
+                this.containerSlider.children[length - i - 1].classList.add('hide');
+            }
+        } else {
+            for (let i = 0; i < this.length; i += 1) {
+                this.containerSlider.children[i].classList.remove('hide');
+                this.containerSlider.children[length - i - 1].classList.remove('hide');
+            }
+        }
+    }
+
     moveRight(e, id = false) {
         const newSlides = this.containerSlider.children;
-        let newOffset = -1;
+        let newOffset = -this.visibleSlides;
         Array.from(newSlides).forEach((item) => {
             item.style.transform = `translate3d(${newOffset * this.blockSize - this.blockSize}px, 0, 0)`;
             newOffset += 1;
@@ -134,7 +151,7 @@ export default class Slider {
 
     moveLeft(e, id = false) {
         const newSlides = this.containerSlider.children;
-        let newOffset = this.visibleSlides;
+        let newOffset = this.visibleSlides + this.visibleSlides - 1;
         for (let i = newSlides.length - 1; i >= 0; i -= 1) {
             newSlides[i].style.transform = `translate3d(${newOffset * this.blockSize + this.blockSize}px, 0, 0)`;
             newOffset -= 1;
@@ -149,15 +166,15 @@ export default class Slider {
         item.classList.add(this.styleClass);
         if (direction === 1) {
             this.currentImg += 1;
-            const id = (this.currentImg + this.visibleSlides) % this.length;
+            const id = (this.currentImg + 2 * this.visibleSlides - 1) % this.length;
             item.innerHTML = this.slider[id];
-            item.style.transform = `translate3d(${direction * this.blockSize * this.visibleSlides}px, 0, 0)`;
+            item.style.transform = `translate3d(${this.blockSize * 2 * (this.visibleSlides - 1) + this.blockSize}px, 0, 0)`;
             this.containerSlider.append(item);
         } else {
             this.currentImg -= 1;
-            const id = (this.currentImg - 1) % this.length;
+            const id = (this.currentImg - this.visibleSlides) % this.length;
             item.innerHTML = this.slider[id];
-            item.style.transform = `translate3d(${direction * this.blockSize}px, 0, 0)`;
+            item.style.transform = `translate3d(${direction * this.visibleSlides * this.blockSize}px, 0, 0)`;
             this.containerSlider.prepend(item);
         }
         if (this.currentImg === 0) {
@@ -316,7 +333,7 @@ export default class Slider {
                 this.moveLeft();
             }
         } else {
-            let newOffset = this.visibleSlides;
+            let newOffset = 2 * this.visibleSlides - 1;
             for (let i = this.containerSlider.children.length - 1; i >= 0; i -= 1) {
                 this.containerSlider.children[i].style.transform = `translate3d(${newOffset * this.blockSize}px,0,0)`;
                 newOffset -= 1;
@@ -331,7 +348,7 @@ export default class Slider {
         const clientX = e.clientX || e.changedTouches[0].pageX;
         this.deltaX = clientX - this.startX;
 
-        let newOffset = this.visibleSlides;
+        let newOffset = 2 * this.visibleSlides - 1;
         for (let i = this.containerSlider.children.length - 1; i >= 0; i -= 1) {
             const position = newOffset * this.blockSize + this.deltaX;
             this.containerSlider.children[i].style.transform = `translate3d(${position}px,0,0)`;
@@ -349,19 +366,6 @@ export default class Slider {
                 const len = this.containerSlider.children.length;
                 this.containerSlider.children[len - 1].remove();
             }
-        }
-
-        this.checkLeaveElement(e);
-    }
-
-    checkLeaveElement(e) {
-        if (e.touches) {
-            const touch = e.touches[0];
-            let element = document.elementFromPoint(touch.pageX, touch.pageY);
-            while (element !== this.containerSlider && element !== document.body) {
-                element = element.parentElement;
-            }
-            if (element !== this.containerSlider) this.upHandler(e);
         }
     }
 }
