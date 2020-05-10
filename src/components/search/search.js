@@ -37,16 +37,17 @@ let slider;
 function createInstanceSlider() {
     if (slider) slider.stopEvents();
     slider = null;
-    slider = new Slider('containerSlides', 265, 'slider__slides-item', 'left', 'right');
+    const WIDTH_SLIDE = 265;
+    slider = new Slider('containerSlides', WIDTH_SLIDE, 'slider__slides-item', 'left', 'right');
     slider.initDraw();
 }
 
 function onloadImg(loadImg, index) {
     const img = document.createElement('img');
     img.onerror = () => {
-        const src = '../../img/default.png';
+        const src = './img/default.png';
         slider.slider[index] = slider.slider[index].replace(img.src, src);
-        if (index < 4) {
+        if (index < slider.visibleMaxSlides) {
             document.getElementById('containerSlides').children[index + 1].children[1].src = src;
         }
     };
@@ -103,7 +104,7 @@ async function getRankingAll(ranks) {
     try {
         const urls = [];
         ranks.forEach((item) => {
-            urls.push(`https://www.omdbapi.com/?i=${item}&apikey=825f3e2`);
+            urls.push(`https://www.omdbapi.com/?i=${item}&apikey=3167cb24`);
         });
 
         const request = urls.map((url) => fetch(url));
@@ -132,7 +133,8 @@ async function getFilmsFromPages(urlPages) {
 async function getTranslate(value) {
     try {
         if (value !== '' && !value.match(/^-{0,1}\d+$/)) {
-            const text = (value.length > 80) ? value.slice(0, 80) : value;
+            const MAX_LENGTH = 80;
+            const text = (value.length > MAX_LENGTH) ? value.slice(0, MAX_LENGTH) : value;
             const urlTranslate = `https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20200414T065147Z.a71577dc7e766811.2ac9a58088466495232d9a8fdb280040dbb99bd2&text=${text}&lang=ru-en`;
             const response = await fetch(urlTranslate);
             if (response.statusText !== 'Bad Request') {
@@ -161,7 +163,7 @@ async function getListFilms(jsonSearch, translate) {
     const pages = Math.ceil(jsonSearch.totalResults / MAX_PAGES);
     const urlPages = [];
     for (let i = 2; i <= pages && i <= MAX_PAGES; i += 1) {
-        urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=825f3e2`);
+        urlPages.push(`http://www.omdbapi.com/?s=${translate}&page=${i}&apikey=3167cb24`);
     }
     if (urlPages.length > 0) {
         const filmsFromPages = await getFilmsFromPages(urlPages);
@@ -196,7 +198,7 @@ export default async function getRequest(myRequest) {
         const text = document.getElementById('input').value.trim();
         const translate = (myRequest === 'terminator') ? myRequest : await getTranslate(text);
 
-        const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=825f3e2`;
+        const urlSearch = `http://www.omdbapi.com/?s=${translate}&apikey=3167cb24`;
         const responseSearch = await fetch(urlSearch);
 
         if (responseSearch) {

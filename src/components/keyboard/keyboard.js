@@ -77,7 +77,8 @@ export default class Keyboard {
     writeLetter(current) {
         const select = this.input.selectionStart;
         let text = this.input.value;
-        if (text.length <= 80) {
+        const MAX_LENGTH = 80;
+        if (text.length <= MAX_LENGTH) {
             text = text.substring(0, select) + current + text.substring(select, text.length);
             this.input.value = text;
             if (current !== '    ') {
@@ -522,7 +523,8 @@ export default class Keyboard {
         try {
             const language = document.getElementById('language');
             language.innerHTML = (this.lang === 'firstLang') ? 'EN' : 'RU';
-            if (window.innerWidth <= 460) {
+            const WIDTH_FOR_CHANGE_TEXT = 460;
+            if (window.innerWidth <= WIDTH_FOR_CHANGE_TEXT) {
                 document.getElementById('delete').innerHTML = 'D';
                 document.getElementById('capsLock').innerHTML = 'Caps';
                 document.getElementById('backspace').innerHTML = 'Back';

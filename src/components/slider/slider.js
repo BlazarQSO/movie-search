@@ -48,9 +48,12 @@ export default class Slider {
     countSlides() {
         const size = window.innerWidth;
         let countSlides = this.visibleMaxSlides;
-        if (size > 1110 && size <= 1400) countSlides = 3;
-        if (size > 820 && size <= 1110) countSlides = 2;
-        if (size <= 820) countSlides = 1;
+        const WIDTH_FOR_FOUR_SLIDES = 1400;
+        const WIDTH_FOR_THREE_SLIDES = 1110;
+        const WIDTH_FOR_TWO_SLIDES = 820;
+        if (size > WIDTH_FOR_THREE_SLIDES && size <= WIDTH_FOR_FOUR_SLIDES) countSlides = 3;
+        if (size > WIDTH_FOR_TWO_SLIDES && size <= WIDTH_FOR_THREE_SLIDES) countSlides = 2;
+        if (size <= WIDTH_FOR_TWO_SLIDES) countSlides = 1;
         return countSlides;
     }
 
@@ -91,6 +94,10 @@ export default class Slider {
                 this.leftBtn.removeEventListener('click', this.moveLeft);
                 document.getElementById('buttons').removeEventListener('click', this.buttonEvent);
                 document.getElementById('buttons').classList.add('lock-slider');
+                this.containerSlider.removeEventListener('mousedown', this.mouseDown);
+                this.containerSlider.removeEventListener('touchstart', this.touchStart, {
+                    passive: false, capture: true,
+                });
             }
         } else if (this.containerSlider.classList.contains('few-slides')) {
             if (!this.changeSlide) {
@@ -105,6 +112,10 @@ export default class Slider {
                 if (this.length > size) this.containerSlider.children[0].classList.remove('hide');
                 document.getElementById('buttons').addEventListener('click', this.buttonEvent);
                 document.getElementById('buttons').classList.remove('lock-slider');
+                this.containerSlider.addEventListener('mousedown', this.mouseDown);
+                this.containerSlider.addEventListener('touchstart', this.touchStart, {
+                    passive: false, capture: true,
+                });
             }
         }
     }
@@ -169,7 +180,7 @@ export default class Slider {
                     if (offSet >= -1) clearInterval(this.interval);
                     offSet += 1;
                     this.moveRight(id);
-                }, 200);
+                }, 240);
             }
         } else {
             this.moveLeft(id);
@@ -180,7 +191,7 @@ export default class Slider {
                     if (offSet <= 1) clearInterval(this.interval);
                     offSet -= 1;
                     this.moveLeft(id);
-                }, 200);
+                }, 240);
             }
         }
     }
@@ -217,7 +228,8 @@ export default class Slider {
     stopEvents() {
         this.stateEvent = false;
         this.containerSlider.removeEventListener('mousedown', this.mouseDown);
-        this.containerSlider.removeEventListener('touchstart', this.mouseDown);
+        this.containerSlider
+            .removeEventListener('touchstart', this.touchStart, { passive: false, capture: true });
         document.getElementById('buttons').removeEventListener('click', this.buttonEvent);
         this.rightBtn.removeEventListener('click', this.moveRight);
         this.leftBtn.removeEventListener('click', this.moveLeft);
@@ -227,6 +239,13 @@ export default class Slider {
         this.leftBtn.classList.remove('lock-slider');
         this.rightBtn.classList.remove('lock-slider');
         document.getElementById('buttons').classList.remove('lock-slider');
+
+        this.containerSlider.removeEventListener('mousemove', this.moveHandler);
+        this.containerSlider.removeEventListener('mouseup', this.upHandler);
+        this.containerSlider.removeEventListener('touchend', this.upHandler);
+        this.containerSlider.removeEventListener('mouseleave', this.upHandler);
+        this.containerSlider
+            .removeEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
     }
 
     startEvents() {
@@ -256,6 +275,7 @@ export default class Slider {
 
     touchStart(event) {
         event.preventDefault();
+        this.stateTouchStart = true;
         this.startX = event.changedTouches[0].pageX;
         this.staticStart = this.startX;
         this.containerSlider.classList.add('cancel-transform');
@@ -279,11 +299,13 @@ export default class Slider {
     }
 
     upHandler(e) {
+        this.stateTouchStart = false;
         this.containerSlider.removeEventListener('mousemove', this.moveHandler);
         this.containerSlider.removeEventListener('mouseup', this.upHandler);
         this.containerSlider.removeEventListener('touchend', this.upHandler);
         this.containerSlider.removeEventListener('mouseleave', this.upHandler);
-        this.containerSlider.removeEventListener('touchmove', this.moveHandler);
+        this.containerSlider
+            .removeEventListener('touchmove', this.moveHandler, { passive: false, capture: true });
 
         this.containerSlider.classList.remove('cancel-transform');
         const NO_SWIPE = 40;
@@ -308,6 +330,7 @@ export default class Slider {
     moveHandler(e) {
         const clientX = e.clientX || e.changedTouches[0].pageX;
         this.deltaX = clientX - this.startX;
+
         let newOffset = this.visibleSlides;
         for (let i = this.containerSlider.children.length - 1; i >= 0; i -= 1) {
             const position = newOffset * this.blockSize + this.deltaX;
@@ -326,6 +349,19 @@ export default class Slider {
                 const len = this.containerSlider.children.length;
                 this.containerSlider.children[len - 1].remove();
             }
+        }
+
+        this.checkLeaveElement(e);
+    }
+
+    checkLeaveElement(e) {
+        if (e.touches) {
+            const touch = e.touches[0];
+            let element = document.elementFromPoint(touch.pageX, touch.pageY);
+            while (element !== this.containerSlider && element !== document.body) {
+                element = element.parentElement;
+            }
+            if (element !== this.containerSlider) this.upHandler(e);
         }
     }
 }

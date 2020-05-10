@@ -1,5 +1,4 @@
 import './style/style.scss';
-import './components/keyboard/keyboard.scss';
 import getRequest from './components/search/search';
 import Speech from './components/search/speech';
 import buttons from './components/keyboard/buttons';
